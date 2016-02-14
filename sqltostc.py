@@ -3,7 +3,7 @@ import mysql.connector
 import sqlconfig
 import sys
 
-def readtable(query):
+def read_table(query):
     cnx = mysql.connector.connect(database=sqlconfig.db, user=sqlconfig.user, password=sqlconfig.passwd, host=sqlconfig.host)
     cur = cnx.cursor(buffered=True)
     
@@ -15,18 +15,18 @@ def readtable(query):
     
     return rows
 
-def alltweetids():
+def all_tweet_ids():
     idlist = []
     query = "select * from " + sqlconfig.id_table_name
-    rows = readtable(query)
+    rows = read_table(query)
     for row in rows:
         idlist.append(row)
     return idlist
         
-def alltweets():
+def all_tweets():
     dic = {}
     query = "select " + "success, item_id, text" + " from " + sqlconfig.tweet_table_name
-    rows = readtable(query)
+    rows = read_table(query)
     for (success, item_id, text) in rows:
         if isvalid(success):
             dic[str(item_id)] = text
@@ -36,21 +36,14 @@ def alltweets():
 
 def isvalid(success):
     return 1 == int(success)
-    
-def genidquery(ids):
-    query = "(,"
-    last = ")"
-    for id in ids:
-        query = query + str(id)
-    return query + last
 
 log = []
 def errorlog(success, item_id):
     log.append((success, item_id))
     
 if __name__ == '__main__':
-    ids = alltweetids()
-    tweets = alltweets()
+    ids = all_tweet_ids()
+    tweets = all_tweets()
     print ids
     for id in tweets:
         print id,tweets[id]
