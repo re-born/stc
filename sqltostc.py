@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 import mysql.connector
 import sqlconfig
 import sys
@@ -6,6 +7,7 @@ def readtable(query):
     cnx = mysql.connector.connect(database=sqlconfig.db, user=sqlconfig.user, password=sqlconfig.passwd, host=sqlconfig.host)
     cur = cnx.cursor(buffered=True)
     
+    cur.execute(query)
     rows = cur.fetchall()
     
     cnx.close()
@@ -32,7 +34,7 @@ def alltweets():
             errorlog(success, item_id)
     return dic
 
-def isvalid():
+def isvalid(success):
     return 1 == int(success)
     
 def genidquery(ids):
@@ -45,3 +47,10 @@ def genidquery(ids):
 log = []
 def errorlog(success, item_id):
     log.append((success, item_id))
+    
+if __name__ == '__main__':
+    ids = alltweetids()
+    tweets = alltweets()
+    print ids
+    for id in tweets:
+        print id,tweets[id]
