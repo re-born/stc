@@ -26,6 +26,7 @@ def sub_network(dic, start_words, distance):
         next_seed = []
         words = seeds.pop(0)
         if no_neighbor_needed(distance):
+            add_all_nodes(words)
             return "No edges were generated"
         for word in words:
             if dic.has_key(word):
@@ -42,6 +43,10 @@ def add_all_edge(start_word, nodes):
     for word in nodes.keys():
         value = nodes[word]
         g.add_edge(start_word, word, weight=value)
+        
+def add_all_nodes(words):
+    for word in words:
+        g.add_node(word)
 
 def draw_graph():
     if is_empty(nx.nodes(g)):
