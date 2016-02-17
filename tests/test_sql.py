@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Testing for SQL"""
 
 
@@ -20,10 +21,9 @@ class SQLTestCase(TestCase):
         print ""
 
     def test_sql_to_table(self):
-        query = "select * from " + sqlconfig.id_table_name
-        print query
+        query = "select * from " + sqlconfig.tweet_table_name + " where id <= 100"
         rows = read_table(query)
-        eq_(len(rows), 500000)
+        eq_(len(rows), 100)
 
     def tearDown(self):
         print "done"
