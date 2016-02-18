@@ -3,6 +3,7 @@
 from collections import defaultdict
 import make_dic as md
 from subnetwork import SubNetwork
+from indexer import Indexer
 from six.moves import cPickle
 
 def main():
