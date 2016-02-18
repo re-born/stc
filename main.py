@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 import make_dic as md
-import SubNetwork
+from subnetwork import SubNetwork
 from six.moves import cPickle
 
 def main():
