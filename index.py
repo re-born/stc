@@ -35,3 +35,8 @@ class Indexer:
             for item in tuples:
                 results[item[0]] += item[1] * score
         return results
+        
+    def update_replies(self, results, tup, score):
+        word = tup[0]
+        score = tup[1] * score
+        results[word] += score

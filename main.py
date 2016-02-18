@@ -19,9 +19,15 @@ def main():
   
   indexer = Indexer()
   indexer.load("./index.pkl")
-  tuple_list = indexer.search(query)
   
-  results = indexer.possible_replies(query)
+  results = defaultdict(int)
+  for query in queries:
+    word = query
+    score = queries[word]
+    tuple_list = indexer.search(word)
+    for tup in tuple_list:
+        results = indexer.update_replies(results, tup, score)
+        
   show_results(results)
   
 def show_results(results):
