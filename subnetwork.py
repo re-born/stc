@@ -27,7 +27,8 @@ class SubNetwork(object):
     def __no_neighbor_needed(self, remained):
         return remained < 0
         
-    def gen_sub_network(self, start_words, distance):
+    def gen_sub_network(self, start_words, distance="2"):
+        distance = int(distance)
         source = self.__source
         seeds = self.__init_seeds(start_words)
         while not is_empty(seeds):
@@ -66,6 +67,10 @@ class SubNetwork(object):
         plt.show()
         return "Graph was shown."
         
+    def pagerank(self,alpha = "0.9"):
+        alpha = float(alpha)
+        return nx.pagerank(self.__graph, alpha)
+        
     def nodes(self):
         return nx.nodes(self.__graph)
         
@@ -97,5 +102,6 @@ if __name__ == '__main__':
     network.gen_sub_network(["A"], N)
     print network.nodes()
     print network.edges()
+    print network.pagerank()
     err = network.draw_graph()
     print err

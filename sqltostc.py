@@ -33,6 +33,20 @@ def all_tweets():
         else:
             errorlog(success, item_id)
     return dic
+    
+def all_tweet_pairs():
+    id_table = sqlconfig.id_table_name
+    tweet_table = sqlconfig.tweet_table_name
+    dic={}
+    query = "select" + "t1.item_id, t1.text, t2.item_id, t2.text " + "from "+ tweet_table +" as t1 "
+    query += "inner join " + id_table + " as ids "
+    qeury += "on t1.item_id = ids.post_id "
+    query += "inner join "+ tweet_table + " as t2 "
+    query += "on ids.reply_id = t2.item_id "
+    query += "where t1.success = 1 and t2.success = 1"
+    rows = read_table(query)
+    pairs = [{"P_ID": row[0], "P_TEXT": row[1], "R_ID": row[2], "R_TEXT": row[3]} for row in rows]
+    return pairs
 
 def isvalid(success):
     return 1 == int(success)
