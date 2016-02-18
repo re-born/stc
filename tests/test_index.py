@@ -20,19 +20,21 @@ class IndexerTestCase(TestCase):
 
     def test_save_and_load(self):
         indexer = Indexer()
-        indexer.add("1", ["今日", "天気", "晴れ"])
+        indexer.add("1", ["今日", "天気", "晴れ", "今日"])
         indexer.add("2", ["今日", "天気", "雨"])
 
         indexer.save("./tests/index.pkl")
         indexer.load("./tests/index.pkl")
 
         tweet_ids = indexer.search("今日")
-        eq_(tweet_ids[0], "1")
-        eq_(tweet_ids[1], "2")
+        eq_(tweet_ids[0][0], "1")
+        eq_(tweet_ids[0][1], 2)
+        eq_(tweet_ids[1][0], "2")
+        eq_(tweet_ids[1][1], 1)
 
         tweet_ids = indexer.search("雨")
         eq_(len(tweet_ids), 1)
-        eq_(tweet_ids[0], "2")
+        eq_(tweet_ids[0][0], "2")
 
     def tearDown(self):
         print "done"
