@@ -43,11 +43,9 @@ def noun_list(text):
 
 if __name__ == '__main__':
   dic = {}
-  tweet = u"私は早稲田大学でコンピューターの勉強をしています"
-  reply = u"私はコンピューター全然わからないので来月教えて下さい。お礼にラーメンをごちそうします。"
-  tweets = sqldata
+  tweets = sqltostc.all_tweet_pairs
   for tweet in tweets:
-    make_dic(tweet.P_text,tweet.R_text,dic)
-  with open(filename, 'wb') as f:
+    make_dic(tweet.P_TEXT,tweet.R_TEXT,dic)
+  with open('tweet_dic.pkl', 'wb') as f:
             cPickle.dump(dic, f, protocol=cPickle.HIGHEST_PROTOCOL)
 
