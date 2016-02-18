@@ -13,8 +13,18 @@ def main():
     source_dic = cPickle.load(f)
 
   net.set_source(source_dic)
-  net.gen_sub_network(noun_list, distance)
-
+  net.gen_sub_network(noun_list)
+  queries = net.page_rank()
+  
+  indexer = Indexer()
+  indexer.load("./index.pkl")
+  tuple_list = indexer.search(query)
+  
+  results = indexer.possible_replies(query)
+  show_results(results)
+  
+def show_results(results):
+    print results
 
 
 if __name__ == '__main__':

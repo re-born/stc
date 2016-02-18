@@ -26,3 +26,12 @@ class Indexer:
 
     def search(self, word):
         return self.index[word]
+
+    def possible_replies(self, dic, queries):
+        results = defaultdict(int)
+        for query in queries:
+            score = queries[query]
+            tuples = search(query)
+            for item in tuples:
+                results[item[0]] += item[1] * score
+        return results
