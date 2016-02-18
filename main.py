@@ -8,8 +8,8 @@ from six.moves import cPickle
 def main():
   text = text
   noun_list = md.noun_list(text)
-  net = new SubNetwork()
-  with open(filename, 'r') as f:
+  net = SubNetwork()
+  with open('tweet_dic.pkl', 'r') as f:
     source_dic = cPickle.load(f)
 
   net.set_source(source_dic)
