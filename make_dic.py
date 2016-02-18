@@ -3,7 +3,7 @@
 from collections import defaultdict
 import MeCab
 import sqlconfig
-from sqltostc
+import sqltostc
 from six.moves import cPickle
 
 def make_dic(tweet, reply, dic):

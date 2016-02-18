@@ -6,7 +6,7 @@ import SubNetwork
 from six.moves import cPickle
 
 def main():
-  text = text
+  text = ""
   noun_list = md.noun_list(text)
   net = SubNetwork()
   with open('tweet_dic.pkl', 'r') as f:
