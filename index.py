@@ -2,8 +2,8 @@
 
 import codecs
 from collections import defaultdict
-from sets import Set
 from six.moves import cPickle
+import nltk
 
 
 class Indexer:
@@ -20,9 +20,9 @@ class Indexer:
             self.index = cPickle.load(f)
 
     def add(self, tweet_id, words):
-        words = Set(words)
-        for word in words:
-            self.index[word].append(tweet_id)
+        vocab = nltk.FreqDist(words).most_common()
+        for (word, tf) in vocab:
+            self.index[word].append((tweet_id, tf))
 
     def search(self, word):
         return self.index[word]
