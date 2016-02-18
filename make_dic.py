@@ -2,6 +2,9 @@
 
 from collections import defaultdict
 import MeCab
+import sqlconfig
+from sqltostc
+from six.moves import cPickle
 
 def make_dic(tweet, reply, dic):
   t_list = noun_list(tweet)
@@ -42,6 +45,9 @@ if __name__ == '__main__':
   dic = {}
   tweet = u"私は早稲田大学でコンピューターの勉強をしています"
   reply = u"私はコンピューター全然わからないので来月教えて下さい。お礼にラーメンをごちそうします。"
-  make_dic(tweet,reply,dic)
-  print(dic)
+  tweets = sqldata
+  for tweet in tweets:
+    make_dic(tweet.P_text,tweet.R_text,dic)
+  with open(filename, 'wb') as f:
+            cPickle.dump(dic, f, protocol=cPickle.HIGHEST_PROTOCOL)
 
