@@ -36,7 +36,7 @@ class SubNetwork(object):
             distance -= 1
             next_seed = []
             words = seeds.pop(0)
-            p = ProgressBar(len(words))
+            p = ProgressBar( maxval = len(words) )
             if self.__no_neighbor_needed(distance):
                 self.add_all_nodes(words)
                 return "No edges were generated"
@@ -105,6 +105,6 @@ if __name__ == '__main__':
     network.gen_sub_network(["A"], N)
     print network.nodes()
     print network.edges()
-    print network.pagerank()
+    print network.page_rank()
     err = network.draw_graph()
     print err
