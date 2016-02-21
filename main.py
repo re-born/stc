@@ -45,9 +45,11 @@ def test_data():
     return all_tweets(sqlconfig.run_table_name)
     
 def main():
+    tuples = {}
     inputs = test_data()
     for input in inputs:
-        retrieve_replies(inputs[input])
+        replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
+        tuples.append(replies)
 
 if __name__ == '__main__':
   main()
