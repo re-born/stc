@@ -8,19 +8,20 @@ from six.moves import cPickle
 from sqltostc import all_tweets
 import sqlconfig
 
+
+net = SubNetwork()
+with open('tweet_dic.pkl', 'r') as f:
+    source_dic = cPickle.load(f)
+net.set_source(source_dic)
+indexer = Indexer()
+indexer.load("./index.pkl")
+
 def retrieve_replies(input):
   text = input
   noun_list = md.noun_list(text)
-  net = SubNetwork()
-  with open('tweet_dic.pkl', 'r') as f:
-    source_dic = cPickle.load(f)
 
-  net.set_source(source_dic)
   net.gen_sub_network(noun_list)
   queries = net.page_rank()
-  
-  indexer = Indexer()
-  indexer.load("./index.pkl")
   
   results = defaultdict(int)
   for query in queries:
@@ -41,10 +42,10 @@ def test_data():
 def main():
     tuples = []
     inputs = test_data()
-    #for input in inputs:
-    input = inputs.keys()[0]
-    print "STCINFO: Twitter ID ->" + input
-    replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
+    tweet_num = len(inputs)
+    for (i,input) in enumerate(inputs):
+        print "STCINFO: " + i + " of " + tweet_num + "@Twitter ID ->" + input
+        replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
     for i in range(10):
     	tuples.append(replies[i])
     print tuples
