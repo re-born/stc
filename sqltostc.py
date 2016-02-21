@@ -27,9 +27,11 @@ def all_tweet_ids():
     return idlist
 
 
-def all_tweets():
+def all_tweets(table_name = None):
+    if table_name is None:
+        table_name = sqlconfig.tweet_table_name
     dic = {}
-    query = "select " + "success, item_id, text" + " from " + sqlconfig.tweet_table_name
+    query = "select " + "success, item_id, text" + " from " + table_name
     rows = read_table(query)
     for (success, item_id, text) in rows:
         if isvalid(success):
