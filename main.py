@@ -10,11 +10,15 @@ import sqlconfig
 
 
 net = SubNetwork()
+print "load tweet pairs....."
 with open('tweet_dic.pkl', 'r') as f:
     source_dic = cPickle.load(f)
 net.set_source(source_dic)
+print "Tweet Pairs loaded: len(pairs) -> " + str(len(source_dic))
+print "load index....."
 indexer = Indexer()
 indexer.load("./index.pkl")
+print "Index loaded"
 
 def retrieve_replies(input):
   text = input
@@ -44,11 +48,14 @@ def main():
     inputs = test_data()
     tweet_num = len(inputs)
     for (i,input) in enumerate(inputs):
-        print "STCINFO: " + i + " of " + tweet_num + "@Twitter ID ->" + input
+        print "STCINFO: " + str(i) + " of " + str(tweet_num) + "@Twitter ID ->" + input
         replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
+    f = open('replies.txt', 'w')
     for i in range(10):
-    	tuples.append(replies[i])
-    print tuples
+        f.write(str(replies[i]) + '\n')
+        tuples.append(replies[i])
+    print tuples[0]
+    f.close()
 
 if __name__ == '__main__':
   main()
