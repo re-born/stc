@@ -20,7 +20,7 @@ class Indexer:
             self.index = cPickle.load(f)
 
     def add(self, tweet_id, words):
-        vocab = nltk.FreqDist(words).most_common()
+        vocab = nltk.FreqDist(words).items()
         for (word, tf) in vocab:
             self.index[word].append((tweet_id, tf))
 
