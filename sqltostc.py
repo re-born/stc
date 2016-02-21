@@ -2,7 +2,6 @@
 import mysql.connector
 import sqlconfig
 import sys
-import ipdb
 
 
 def read_table(query):
