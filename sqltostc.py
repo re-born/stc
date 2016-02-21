@@ -66,8 +66,6 @@ def errorlog(success, item_id):
     log.append((success, item_id))
 
 if __name__ == '__main__':
-    ids = all_tweet_ids()
-    tweets = all_tweets()
-    print ids
-    for id in tweets:
-        print id, tweets[id]
+    tweets = all_tweets(sqlconfig.run_table_name)
+    print "check input tweets"
+    print len(tweets)
