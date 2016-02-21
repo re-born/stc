@@ -27,7 +27,8 @@ class SubNetwork(object):
     def __no_neighbor_needed(self, remained):
         return remained < 0
         
-    def gen_sub_network(self, start_words, distance="2"):
+    def gen_sub_network(self, start_words, distance="1"):
+        __graph = nx.DiGraph()
         distance = int(distance)
         source = self.__source
         seeds = self.__init_seeds(start_words)
