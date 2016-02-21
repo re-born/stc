@@ -29,11 +29,21 @@ def retrieve_replies(input):
     tuple_list = indexer.search(word)
     for tup in tuple_list:
         results = indexer.update_replies(results, tup, score)
-        
+  results = tuples_from_dict(results)
   show_results(results)
   
 def show_results(results):
     print results
+    
+def tuples_from_dict(dic, sort=None, reverse=None):
+    if sort is None:
+        sort = True
+        if reverse is None:
+            reverse = True
+    if sort:
+        return sorted(dic.items(), key=lambda x:x[1], reverse=True)
+    else:
+        return dic.items()
 
 def test_data():
     return all_tweets(sqlconfig.run_table_name)
