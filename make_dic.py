@@ -45,7 +45,7 @@ def make_dic(tweet, reply, dic):
 
 def noun_list(text):
     arr = []
-    tagger = MeCab.Tagger("-Ochasen")
+    tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
     encode_text = text.encode('utf-8')
     node = tagger.parseToNode(encode_text)
     while node:
