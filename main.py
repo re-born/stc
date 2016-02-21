@@ -30,6 +30,7 @@ def retrieve_replies(input):
     for tup in tuple_list:
         results = indexer.update_replies(results, tup, score)
   results = tuples_from_dict(results)
+  return results
     
 def tuples_from_dict(dic, sort=None, reverse=None):
     if sort is None:
