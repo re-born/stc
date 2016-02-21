@@ -15,8 +15,6 @@ def retrieve_replies(input):
   with open('tweet_dic.pkl', 'r') as f:
     source_dic = cPickle.load(f)
 
-  print source_dic
-
   net.set_source(source_dic)
   net.gen_sub_network(noun_list)
   queries = net.page_rank()

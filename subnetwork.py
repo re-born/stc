@@ -2,7 +2,6 @@
 import sys
 import networkx as nx
 import matplotlib.pyplot as plt
-from progressbar import ProgressBar
 
 
 def is_empty(l):
@@ -36,12 +35,10 @@ class SubNetwork(object):
             distance -= 1
             next_seed = []
             words = seeds.pop(0)
-            p = ProgressBar( maxval = len(words) )
             if self.__no_neighbor_needed(distance):
                 self.add_all_nodes(words)
                 return "No edges were generated"
-            for (i,word) in enumerate(words):
-                p.update(i+1)
+            for word in words:
                 if source.has_key(word):
                     nodes = source[word]
                     self.add_all_edge(word, nodes)
