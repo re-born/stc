@@ -39,4 +39,8 @@ class Indexer:
     def update_replies(self, results, tup, score):
         word = tup[0]
         score = tup[1] * score
-        results[word] += score
+        if results.has_key(word):
+            results[word] += score
+        else:
+            results[word] = score
+        return results
