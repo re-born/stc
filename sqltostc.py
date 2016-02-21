@@ -2,9 +2,12 @@
 import mysql.connector
 import sqlconfig
 import sys
+import ipdb
+
 
 def read_table(query):
-    cnx = mysql.connector.connect(database=sqlconfig.db, user=sqlconfig.user, password=sqlconfig.passwd, host=sqlconfig.host)
+    cnx = mysql.connector.connect(database=sqlconfig.db, user=sqlconfig.user,
+                                  password=sqlconfig.passwd, host=sqlconfig.host)
     cur = cnx.cursor(buffered=True)
 
     cur.execute(query)
@@ -15,6 +18,7 @@ def read_table(query):
 
     return rows
 
+
 def all_tweet_ids():
     idlist = []
     query = "select * from " + sqlconfig.id_table_name
@@ -22,6 +26,7 @@ def all_tweet_ids():
     for row in rows:
         idlist.append(row)
     return idlist
+
 
 def all_tweets():
     dic = {}
@@ -33,25 +38,29 @@ def all_tweets():
         else:
             errorlog(success, item_id)
     return dic
-    
+
+
 def all_tweet_pairs():
     id_table = sqlconfig.id_table_name
     tweet_table = sqlconfig.tweet_table_name
-    dic={}
-    query = "select" + "t1.item_id, t1.text, t2.item_id, t2.text " + "from "+ tweet_table +" as t1 "
+    dic = {}
+    query = "select " + "t1.item_id, t1.text, t2.item_id, t2.text " + "from " + tweet_table + " as t1 "
     query += "inner join " + id_table + " as ids "
-    qeury += "on t1.item_id = ids.post_id "
-    query += "inner join "+ tweet_table + " as t2 "
+    query += "on t1.item_id = ids.post_id "
+    query += "inner join " + tweet_table + " as t2 "
     query += "on ids.reply_id = t2.item_id "
     query += "where t1.success = 1 and t2.success = 1"
     rows = read_table(query)
     pairs = [{"P_ID": row[0], "P_TEXT": row[1], "R_ID": row[2], "R_TEXT": row[3]} for row in rows]
     return pairs
 
+
 def isvalid(success):
     return 1 == int(success)
 
 log = []
+
+
 def errorlog(success, item_id):
     log.append((success, item_id))
 
@@ -60,4 +69,4 @@ if __name__ == '__main__':
     tweets = all_tweets()
     print ids
     for id in tweets:
-        print id,tweets[id]
+        print id, tweets[id]
