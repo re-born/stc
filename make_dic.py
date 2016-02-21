@@ -1,51 +1,95 @@
 # -*- coding: utf-8 -*-
 
+import os
+from os import path
+import argparse
+import logging
+import time
+from progressbar import ProgressBar, Percentage, Bar
 from collections import defaultdict
 import MeCab
 import sqlconfig
 import sqltostc
 from six.moves import cPickle
 
-def make_dic(tweet, reply, dic):
-  t_list = noun_list(tweet)
-  r_list = noun_list(reply)
-  for x in xrange(0,len(t_list)-1):
-    if t_list[x] in dic:
-      dic[t_list[x]][t_list[x+1]] += 1
-      for y in r_list:
-        dic[t_list[x]][y] += 1
-    else:
-      dic[t_list[x]] = defaultdict(lambda:0)
-      dic[t_list[x]][t_list[x+1]] += 1
-      for y in r_list:
-        dic[t_list[x]][y] += 1
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger('make_dic')
 
-  for x in xrange(0,len(r_list)-1):
-    if r_list[x] in dic:
-      dic[r_list[x]][r_list[x+1]] += 1
-    else:
-      dic[r_list[x]] = defaultdict(lambda:0)
-      dic[r_list[x]][r_list[x+1]] += 1
+parser = argparse.ArgumentParser()
+parser.add_argument('--file-path', type=str, default='./tweet_dic.pkl')
+parser.add_argument('--overwrite', type=bool, default=False)
+args = parser.parse_args()
+
+
+def make_dic(tweet, reply, dic):
+    t_list = noun_list(tweet)
+    r_list = noun_list(reply)
+    for x in xrange(0, len(t_list) - 1):
+        if t_list[x] in dic:
+            dic[t_list[x]][t_list[x + 1]] += 1
+            for y in r_list:
+                dic[t_list[x]][y] += 1
+        else:
+            dic[t_list[x]] = defaultdict(int)
+            dic[t_list[x]][t_list[x + 1]] += 1
+            for y in r_list:
+                dic[t_list[x]][y] += 1
+
+    for x in xrange(0, len(r_list) - 1):
+        if r_list[x] in dic:
+            dic[r_list[x]][r_list[x + 1]] += 1
+        else:
+            dic[r_list[x]] = defaultdict(int)
+            dic[r_list[x]][r_list[x + 1]] += 1
+
 
 def noun_list(text):
-  arr = []
-  tagger = MeCab.Tagger("-Ochasen")
-  encode_text = text.encode('utf-8')
-  node = tagger.parseToNode(encode_text)
-  while node:
-    feature = node.feature
-    speech = feature.split(",")[0]
-    if speech in [r'名詞']:
-      arr.append(node.surface)
-    node = node.next
-  return arr
+    arr = []
+    tagger = MeCab.Tagger("-Ochasen")
+    encode_text = text.encode('utf-8')
+    node = tagger.parseToNode(encode_text)
+    while node:
+        feature = node.feature
+        speech = feature.split(",")[0]
+        if speech in [r'名詞']:
+            arr.append(node.surface)
+        node = node.next
+    return arr
+
+
+def save_dic(file_path):
+    logger.info('SQL running...')
+    start = time.time()
+    dic = {}
+    tweets = sqltostc.all_tweet_pairs()
+    elapsed_time = time.time() - start
+    logger.info('sql_time:{0}[sec]'.format(elapsed_time))
+
+    logger.info('Making Dic...')
+    start = time.time()
+    p = ProgressBar(widgets=[Percentage(), Bar()], maxval=len(tweets)).start()
+    for i, tweet in enumerate(tweets):
+        make_dic(tweet['P_TEXT'], tweet['R_TEXT'], dic)
+        p.update(i + 1)
+    p.finish()
+    elapsed_time = time.time() - start
+    logger.info('making_time:{0}[sec]'.format(elapsed_time))
+
+    logger.info('Saving...')
+    with open(file_path, 'wb') as f:
+        cPickle.dump(dic, f, protocol=cPickle.HIGHEST_PROTOCOL)
+    logger.info('Done')
 
 
 if __name__ == '__main__':
-  dic = {}
-  tweets = sqltostc.all_tweet_pairs
-  for tweet in tweets:
-    make_dic(tweet.P_TEXT,tweet.R_TEXT,dic)
-  with open('tweet_dic.pkl', 'wb') as f:
-            cPickle.dump(dic, f, protocol=cPickle.HIGHEST_PROTOCOL)
-
+    if path.isfile(args.file_path):
+        logger.info('{} already exists'.format(args.file_path))
+        if args.overwrite:
+            logger.info('overwrite flag is True')
+            save_dic(args.file_path)
+    else:
+        dirname = path.dirname(args.file_path)
+        if not path.isdir(dirname):
+            logger.info('create {}'.format(dirname))
+            os.mkdir(dirname)
+        save_dic(args.file_path)
