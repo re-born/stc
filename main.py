@@ -48,9 +48,11 @@ def test_data():
 def main():
     tuples = []
     inputs = test_data()
-    for input in inputs:
-        replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
-        tuples.append(replies)
+    #for input in inputs:
+    input = inputs.keys()[0]
+    print "STCINFO: Twitter ID ->" + input
+    replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
+    tuples.append(replies)
     print tuples[1]
 
 if __name__ == '__main__':
