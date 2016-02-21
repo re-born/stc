@@ -67,7 +67,7 @@ class SubNetwork(object):
         plt.show()
         return "Graph was shown."
         
-    def pagerank(self,alpha = "0.9"):
+    def page_rank(self,alpha = "0.9"):
         alpha = float(alpha)
         return nx.pagerank(self.__graph, alpha)
         
