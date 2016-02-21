@@ -5,9 +5,11 @@ import make_dic as md
 from subnetwork import SubNetwork
 from indexer import Indexer
 from six.moves import cPickle
+from sqltostc import all_tweets
+import sqlconfig
 
-def main():
-  text = ""
+def retrieve_replies(input):
+  text = input
   noun_list = md.noun_list(text)
   net = SubNetwork()
   with open('tweet_dic.pkl', 'r') as f:
@@ -27,12 +29,29 @@ def main():
     tuple_list = indexer.search(word)
     for tup in tuple_list:
         results = indexer.update_replies(results, tup, score)
-        
+  results = tuples_from_dict(results)
   show_results(results)
   
 def show_results(results):
     print results
+    
+def tuples_from_dict(dic, sort=None, reverse=None):
+    if sort is None:
+        sort = True
+        if reverse is None:
+            reverse = True
+    if sort:
+        return sorted(dic.items(), key=lambda x:x[1], reverse=True)
+    else:
+        return dic.items()
 
+def test_data():
+    return all_tweets(sqlconfig.run_table_name)
+    
+def main():
+    inputs = test_data()
+    for input in inputs:
+        retrieve_replies(inputs[input])
 
 if __name__ == '__main__':
   main()
