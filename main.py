@@ -3,7 +3,7 @@
 from collections import defaultdict
 import make_dic as md
 from subnetwork import SubNetwork
-from indexer import Indexer
+from index import Indexer
 from six.moves import cPickle
 from sqltostc import all_tweets
 import sqlconfig
@@ -50,6 +50,7 @@ def main():
     for input in inputs:
         replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
         tuples.append(replies)
+    print tuples[1]
 
 if __name__ == '__main__':
   main()
