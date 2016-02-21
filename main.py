@@ -41,7 +41,7 @@ def test_data():
 def main():
     inputs = test_data()
     for input in inputs:
-        retrieve_replies(iput)
+        retrieve_replies(inputs[input])
 
 if __name__ == '__main__':
   main()
