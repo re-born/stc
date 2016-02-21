@@ -50,7 +50,7 @@ def main():
     for (i,input) in enumerate(inputs):
         print "STCINFO: " + str(i) + " of " + str(tweet_num) + "@Twitter ID ->" + input
         replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
-    f = open('replies.txt', 'w')
+    f = open('replies.txt', 'a')
     for i in range(10):
         f.write(str(replies[i]) + '\n')
         tuples.append(replies[i])
