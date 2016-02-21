@@ -5,6 +5,8 @@ import make_dic as md
 from subnetwork import SubNetwork
 from indexer import Indexer
 from six.moves import cPickle
+import sqltostc as sql
+import sqlconfig
 
 def main():
   text = ""
@@ -33,6 +35,8 @@ def main():
 def show_results(results):
     print results
 
+def test_data():
+    return sql.all_tweets(sqlconfig.run_table_name)
 
 if __name__ == '__main__':
   main()
