@@ -32,15 +32,8 @@ def retrieve_replies(input):
   results = tuples_from_dict(results)
   return results
     
-def tuples_from_dict(dic, sort=None, reverse=None):
-    if sort is None:
-        sort = True
-        if reverse is None:
-            reverse = True
-    if sort:
-        return sorted(dic.items(), key=lambda x:x[1], reverse=True)
-    else:
-        return dic.items()
+def tuples_from_dict(dic):
+    return sorted(dic.items(), key=lambda x:x[1], reverse=False)
 
 def test_data():
     return all_tweets(sqlconfig.run_table_name)
@@ -52,8 +45,9 @@ def main():
     input = inputs.keys()[0]
     print "STCINFO: Twitter ID ->" + input
     replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
-    tuples.append(replies)
-    print tuples[1]
+    for i in range(10):
+    	tuples.append(replies[i])
+    print tuples
 
 if __name__ == '__main__':
   main()
