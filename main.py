@@ -46,7 +46,7 @@ def test_data():
     return all_tweets(sqlconfig.run_table_name)
     
 def main():
-    tuples = {}
+    tuples = []
     inputs = test_data()
     for input in inputs:
         replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
