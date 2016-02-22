@@ -6,20 +6,6 @@ import sqlconfig
 from sqltostc import read_table
 
 
-def noun_list(text):
-    arr = []
-    tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
-    encode_text = text.encode('utf-8')
-    node = tagger.parseToNode(encode_text)
-    while node:
-        feature = node.feature
-        speech = feature.split(",")[0]
-        if speech in [r'名詞']:
-            arr.append(node.surface)
-        node = node.next
-    return arr
-
-
 class RunFile():
     """
     <teamID>-J-R[priority].txt

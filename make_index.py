@@ -8,7 +8,7 @@ import logging
 import time
 from progressbar import ProgressBar, Percentage, Bar
 
-from stcutils import noun_list
+from make_dic import noun_list
 import sqlconfig
 from sqltostc import read_table
 from index import Indexer
@@ -19,11 +19,19 @@ logger = logging.getLogger('make_index')
 parser = argparse.ArgumentParser()
 parser.add_argument('--file-path', type=str, default='./index.pkl')
 parser.add_argument('--overwrite', type=bool, default=False)
+parser.add_argument('--only-reply', type=bool, default=False)
 args = parser.parse_args()
 
 
+def get_query(only_reply):
+    if only_reply:
+        return "SELECT t.item_id, t.text FROM stc_tweet_ids AS ids INNER JOIN stc_tweets AS t ON ids.reply_id = t.item_id WHERE t.success = 1"
+    else:
+        return "SELECT item_id, text FROM " + sqlconfig.tweet_table_name + " WHERE success = 1"
+
+
 def save_index(file_path):
-    query = "SELECT item_id, text FROM " + sqlconfig.tweet_table_name + " WHERE success = 1"
+    query = get_query(args.only_reply)
     logger.info('query: {}'.format(query))
 
     logger.info("SQL running...")
@@ -49,14 +57,18 @@ def save_index(file_path):
 
 
 if __name__ == "__main__":
-    if path.isfile(args.file_path):
-        logger.info('{} already exists'.format(args.file_path))
+    if args.only_reply:
+        file_path = './only_reply_index.pkl'
+    else:
+        file_path = args.file_path
+    if path.isfile(file_path):
+        logger.info('{} already exists'.format(file_path))
         if args.overwrite:
             logger.info('overwrite flag is True')
-            save_index(args.file_path)
+            save_index(file_path)
     else:
-        dirname = path.dirname(args.file_path)
+        dirname = path.dirname(file_path)
         if not path.isdir(dirname):
             logger.info('create {}'.format(dirname))
             os.mkdir(dirname)
-        save_index(args.file_path)
+        save_index(file_path)
