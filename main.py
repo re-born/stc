@@ -38,7 +38,7 @@ def retrieve_replies(input):
   return results
     
 def tuples_from_dict(dic):
-    return sorted(dic.items(), key=lambda x:x[1], reverse=False)
+    return sorted(dic.items(), key=lambda x:x[1], reverse=True)
 
 def test_data():
     return all_tweets(sqlconfig.run_table_name)

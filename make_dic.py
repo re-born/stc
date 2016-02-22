@@ -8,7 +8,9 @@ import time
 from progressbar import ProgressBar, Percentage, Bar
 from collections import defaultdict
 from six.moves import cPickle
+import re
 import MeCab
+
 
 import sqlconfig
 import sqltostc
@@ -44,15 +46,25 @@ def make_dic(tweet, reply, dic):
             dic[r_list[x]][r_list[x + 1]] += 1
 
 
+def remove_twitter_id(text):
+    ids = re.findall(r'@\w+',text)
+    for id in ids:
+        text = text.replace(id, '')
+    #先頭のreply_idの直後にwhite_spaceが残るので削除
+    return text.replace(' ','')
+
 def noun_list(text):
     arr = []
+    content = [r'固有名詞', r'一般', r'サ変動詞', r'形容動詞語幹']
     tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
+    text = remove_twitter_id(text)
     encode_text = text.encode('utf-8')
     node = tagger.parseToNode(encode_text)
     while node:
         feature = node.feature
         speech = feature.split(",")[0]
-        if speech in [r'名詞']:
+        detail = feature.split(",")[1]
+        if (speech in [r'名詞']) and (detail in content):
             arr.append(node.surface)
         node = node.next
     return arr
