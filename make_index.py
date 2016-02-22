@@ -8,7 +8,7 @@ import logging
 import time
 from progressbar import ProgressBar, Percentage, Bar
 
-from stcutils import noun_list
+from make_dic import noun_list
 import sqlconfig
 from sqltostc import read_table
 from index import Indexer
