@@ -47,7 +47,7 @@ def tuples_from_dict(dic):
     return sorted(dic.items(), key=lambda x:x[1], reverse=True)
 
 def normalize(results, dic):
-    return [ (tweet[0], tweet[1]/dic[tweet[0]]) for tweet in results]
+    return [ (tweet[0], tweet[1]/(dic[tweet[0]]+1)) for tweet in results]
 
 def test_data():
     return all_tweets(sqlconfig.run_table_name)
