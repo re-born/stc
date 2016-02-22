@@ -45,21 +45,7 @@ def make_dic(tweet, reply, dic):
             dic[r_list[x]] = defaultdict(int)
             dic[r_list[x]][r_list[x + 1]] += 1
 
-
 def noun_list(text):
-    arr = []
-    tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
-    encode_text = text.encode('utf-8')
-    node = tagger.parseToNode(encode_text)
-    while node:
-        feature = node.feature
-        speech = feature.split(",")[0]
-        if speech in [r'名詞']:
-            arr.append(node.surface)
-        node = node.next
-    return arr
-    
-def content_list(text):
     arr = []
     content = [r'固有名詞', r'一般', r'サ変動詞', r'形容動詞語幹']
     tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")

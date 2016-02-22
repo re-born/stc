@@ -10,7 +10,7 @@ from progressbar import ProgressBar, Percentage, Bar
 
 import sqlconfig
 from sqltostc import read_table
-from stcutils import Tweet, noun_list
+from stcutils import Tweet, content_list
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -25,7 +25,7 @@ def main():
     for item_id in args.ids:
         t = Tweet(item_id)
         logger.info('ITEM_ID:{0}, TEXT:{1}'.format(t.item_id, t.text.encode('utf-8')))
-        for word in noun_list(t.text):
+        for word in content_list(t.text):
             logger.info('  {}'.format(word))
 
 
