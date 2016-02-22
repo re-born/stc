@@ -1,3 +1,11 @@
+# For this project
+log.txt
+output.log
+err.log
+replies.txt
+
+# -*- coding: utf-8 -*-
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
