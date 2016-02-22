@@ -52,6 +52,8 @@ def remove_twitter_id(text):
     # 先頭のreply_idの直後にwhite_spaceが残るので削除
     return text.replace(' ', '')
 
+def is_RT(text):
+    return not (re.match('RT', text) is None)
 
 def noun_list(text):
     arr = []
