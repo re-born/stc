@@ -40,14 +40,17 @@ def retrieve_replies(input):
     tuple_list = indexer.search(word)
     for tup in tuple_list:
         results = indexer.update_replies(results, tup, score)
-  results = tuples_from_dict(results)
-  return normalize(results, wc_dic)
+  results = tuples_from_dict(normalize(results, wc_dic))
+  return results
+#  return normalize(results, wc_dic)
     
 def tuples_from_dict(dic):
-    return sorted(dic.items(), key=lambda x:x[1], reverse=True)
+    return sorted(dic.items(), key=lambda x:x[1]*100000, reverse=True)
 
 def normalize(results, dic):
-    return [ (tweet[0], tweet[1]/(dic[tweet[0]]+1)) for tweet in results]
+    for tweet in results:
+        results[tweet] = results[tweet] / (dic[tweet] + 1)
+    return results
 
 def test_data():
     return all_tweets(sqlconfig.run_table_name)
@@ -55,7 +58,7 @@ def test_data():
 def main():
     tuples = []
     inputs = test_data()
-    input_keys = inputs.keys()[:12]
+    input_keys = inputs.keys()[:6]
     tweet_num = len(input_keys)
     f = open('replies.txt', 'w')
     for (i,input) in enumerate(input_keys):
