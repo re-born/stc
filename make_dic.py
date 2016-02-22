@@ -54,6 +54,7 @@ def remove_twitter_id(text):
     return text.replace(' ','')
 
 def noun_list(text):
+    re.compile(r'.*%s.*' % "ww")
     arr = []
     content = [r'固有名詞', r'一般', r'サ変動詞', r'形容動詞語幹']
     tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
@@ -61,6 +62,9 @@ def noun_list(text):
     encode_text = text.encode('utf-8')
     node = tagger.parseToNode(encode_text)
     while node:
+        if re.match(node.surface):
+            node = node.next
+            continue
         feature = node.feature
         speech = feature.split(",")[0]
         detail = feature.split(",")[1]
