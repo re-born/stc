@@ -57,6 +57,8 @@ def is_RT(text):
 
 def noun_list(text):
     arr = []
+    if is_RT(text):
+        return arr
     content = [r'固有名詞', r'一般', r'サ変動詞', r'形容動詞語幹']
     tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
     text = remove_twitter_id(text)
@@ -67,7 +69,8 @@ def noun_list(text):
         speech = feature.split(",")[0]
         detail = feature.split(",")[1]
         if (speech in [r'名詞']) and (detail in content):
-            arr.append(node.surface)
+            if not (node.surface in arr):
+                arr.append(node.surface)
         node = node.next
     return arr
 
