@@ -21,7 +21,6 @@ logger = logging.getLogger('make_dic')
 parser = argparse.ArgumentParser()
 parser.add_argument('--file-path', type=str, default='./tweet_dic.pkl')
 parser.add_argument('--overwrite', type=bool, default=False)
-args = parser.parse_args()
 
 
 def make_dic(tweet, reply, dic):
@@ -47,11 +46,12 @@ def make_dic(tweet, reply, dic):
 
 
 def remove_twitter_id(text):
-    ids = re.findall(r'@\w+',text)
+    ids = re.findall(r'@\w+', text)
     for id in ids:
         text = text.replace(id, '')
-    #先頭のreply_idの直後にwhite_spaceが残るので削除
-    return text.replace(' ','')
+    # 先頭のreply_idの直後にwhite_spaceが残るので削除
+    return text.replace(' ', '')
+
 
 def noun_list(text):
     arr = []
@@ -95,6 +95,7 @@ def save_dic(file_path):
 
 
 if __name__ == '__main__':
+    args = parser.parse_args()
     if path.isfile(args.file_path):
         logger.info('{} already exists'.format(args.file_path))
         if args.overwrite:
