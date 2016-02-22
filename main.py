@@ -39,10 +39,10 @@ def retrieve_replies(input):
     word = query
     score = queries[word]
     tuple_list = indexer.search(word)
-    df = len(tupple_list)
+    df = len(tuple_list)
     for tup in tuple_list:
-        score *= idf(df)
-        results = indexer.update_replies(results, tup, score)
+        s = score * idf(df)
+        results = indexer.update_replies(results, tup, s)
   results = tuples_from_dict(normalize(results, wc_dic))
   return results
 #  return normalize(results, wc_dic)
@@ -65,7 +65,7 @@ def test_data():
 def main():
     tuples = []
     inputs = test_data()
-    input_keys = inputs.keys()[:6]
+    input_keys = inputs.keys()[:2]
     tweet_num = len(input_keys)
     f = open('replies.txt', 'w')
     for (i,input) in enumerate(input_keys):
