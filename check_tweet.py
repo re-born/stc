@@ -10,7 +10,8 @@ from progressbar import ProgressBar, Percentage, Bar
 
 import sqlconfig
 from sqltostc import read_table
-from stcutils import Tweet, noun_list
+from stcutils import Tweet
+from make_dic import noun_list
 
 
 logging.basicConfig(level=logging.DEBUG)
