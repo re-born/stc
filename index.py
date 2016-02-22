@@ -21,8 +21,9 @@ class Indexer:
 
     def add(self, tweet_id, words):
         vocab = Counter(words).most_common()
+        l = len(vocab)
         for (word, tf) in vocab:
-            self.index[word].append((tweet_id, tf))
+            self.index[word].append((tweet_id, l-tf+1/l))
 
     def search(self, word):
         return self.index[word]

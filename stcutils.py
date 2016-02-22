@@ -5,7 +5,6 @@ import MeCab
 import sqlconfig
 from sqltostc import read_table
 
-
 class RunFile():
     """
     <teamID>-J-R[priority].txt
