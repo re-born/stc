@@ -8,7 +8,9 @@ import time
 from progressbar import ProgressBar, Percentage, Bar
 from collections import defaultdict
 from six.moves import cPickle
+import re
 import MeCab
+
 
 import sqlconfig
 import sqltostc
