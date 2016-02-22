@@ -56,7 +56,7 @@ def is_RT(text):
     return not (re.match('RT', text) is None)
 
 def noun_list(text):
-    re.compile(r'.*%s.*' % "ww")
+    rex = re.compile(r'.*%s.*' % "ww")
     arr = []
     if is_RT(text):
         return arr
@@ -66,7 +66,7 @@ def noun_list(text):
     encode_text = text.encode('utf-8')
     node = tagger.parseToNode(encode_text)
     while node:
-        if re.match(node.surface):
+        if rex.match(node.surface):
             node = node.next
             continue
         feature = node.feature

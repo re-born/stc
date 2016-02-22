@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from collections import defaultdict
+import math
 import make_dic as md
 from subnetwork import SubNetwork
 from index import Indexer
@@ -38,12 +39,18 @@ def retrieve_replies(input):
     word = query
     score = queries[word]
     tuple_list = indexer.search(word)
+    df = len(tupple_list)
     for tup in tuple_list:
+        score *= idf(df)
         results = indexer.update_replies(results, tup, score)
   results = tuples_from_dict(normalize(results, wc_dic))
   return results
 #  return normalize(results, wc_dic)
-    
+
+def idf(df):
+    N = len(source_dic)
+    return math.log(N/df + 1,10)
+
 def tuples_from_dict(dic):
     return sorted(dic.items(), key=lambda x:x[1]*100000, reverse=True)
 
