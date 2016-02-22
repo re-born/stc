@@ -46,15 +46,15 @@ def test_data():
 def main():
     tuples = []
     inputs = test_data()
-    tweet_num = len(inputs)
-    for (i,input) in enumerate(inputs):
-        print "STCINFO: " + str(i) + " of " + str(tweet_num) + "@Twitter ID ->" + input
+    input_keys = inputs.keys()[:12]
+    tweet_num = len(input_keys)
+    f = open('replies.txt', 'w')
+    for (i,input) in enumerate(input_keys):
+        print "STCINFO: " + str(i+1) + " of " + str(tweet_num) + "@Twitter ID ->" + input
         replies = [(input,) + tup for tup in retrieve_replies(inputs[input])]
-    f = open('replies.txt', 'a')
-    for i in range(10):
-        f.write(str(replies[i]) + '\n')
-        tuples.append(replies[i])
-    print tuples[0]
+        for i in range(10):
+            f.write(str(replies[i]) + '\n')
+            tuples.append(replies[i])
     f.close()
 
 if __name__ == '__main__':
