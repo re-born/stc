@@ -21,7 +21,6 @@ logger = logging.getLogger('make_dic')
 parser = argparse.ArgumentParser()
 parser.add_argument('--file-path', type=str, default='./tweet_dic.pkl')
 parser.add_argument('--overwrite', type=bool, default=False)
-args = parser.parse_args()
 
 
 def make_dic(tweet, reply, dic):
@@ -47,15 +46,20 @@ def make_dic(tweet, reply, dic):
 
 
 def remove_twitter_id(text):
-    ids = re.findall(r'@\w+',text)
+    ids = re.findall(r'@\w+', text)
     for id in ids:
         text = text.replace(id, '')
-    #先頭のreply_idの直後にwhite_spaceが残るので削除
-    return text.replace(' ','')
+    # 先頭のreply_idの直後にwhite_spaceが残るので削除
+    return text.replace(' ', '')
+
+def is_RT(text):
+    return not (re.match('RT', text) is None)
 
 def noun_list(text):
     re.compile(r'.*%s.*' % "ww")
     arr = []
+    if is_RT(text):
+        return arr
     content = [r'固有名詞', r'一般', r'サ変動詞', r'形容動詞語幹']
     tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
     text = remove_twitter_id(text)
@@ -69,7 +73,8 @@ def noun_list(text):
         speech = feature.split(",")[0]
         detail = feature.split(",")[1]
         if (speech in [r'名詞']) and (detail in content):
-            arr.append(node.surface)
+            if not (node.surface in arr):
+                arr.append(node.surface)
         node = node.next
     return arr
 
@@ -99,6 +104,7 @@ def save_dic(file_path):
 
 
 if __name__ == '__main__':
+    args = parser.parse_args()
     if path.isfile(args.file_path):
         logger.info('{} already exists'.format(args.file_path))
         if args.overwrite:

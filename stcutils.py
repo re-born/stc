@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import re
 import MeCab
 
 import sqlconfig
 from sqltostc import read_table
-
 
 class RunFile():
     """
