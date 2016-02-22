@@ -22,7 +22,7 @@ print "Index loaded"
 
 def retrieve_replies(input):
   text = input
-  noun_list = md.noun_list(text)
+  noun_list = md.content_list(text)
 
   net.gen_sub_network(noun_list)
   queries = net.page_rank()

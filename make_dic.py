@@ -23,8 +23,10 @@ args = parser.parse_args()
 
 
 def make_dic(tweet, reply, dic):
-    t_list = noun_list(tweet)
-    r_list = noun_list(reply)
+    #t_list = noun_list(tweet)
+    #r_list = noun_list(reply)
+    t_list = content_list(tweet)
+    r_list = content_list(reply)
     for x in xrange(0, len(t_list) - 1):
         if t_list[x] in dic:
             dic[t_list[x]][t_list[x + 1]] += 1
@@ -53,6 +55,21 @@ def noun_list(text):
         feature = node.feature
         speech = feature.split(",")[0]
         if speech in [r'名詞']:
+            arr.append(node.surface)
+        node = node.next
+    return arr
+    
+def content_list(text):
+    arr = []
+    content = [r'固有名詞', r'一般', r'サ変動詞', r'形容動詞語幹']
+    tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
+    encode_text = text.encode('utf-8')
+    node = tagger.parseToNode(encode_text)
+    while node:
+        feature = node.feature
+        speech = feature.split(",")[0]
+        detail = feature.split(",")[1]
+        if (speech in [r'名詞']) and (detail in content):
             arr.append(node.surface)
         node = node.next
     return arr
