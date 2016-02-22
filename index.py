@@ -37,11 +37,16 @@ class Indexer:
                 results[item[0]] += item[1] * score
         return results
 
+    wc_index = defaultdict(int)
     def update_replies(self, results, tup, score):
         word = tup[0]
         score = tup[1] * score
         if results.has_key(word):
-            results[word] += score
+            v = results[word]
+            c = self.wc_index[word]
+            results[word] = (v*c + score)/(c+1)
+            self.wc_index[word] += 1
         else:
             results[word] = score
+            self.wc_index[word] = 1
         return results
