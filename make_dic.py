@@ -23,10 +23,8 @@ args = parser.parse_args()
 
 
 def make_dic(tweet, reply, dic):
-    #t_list = noun_list(tweet)
-    #r_list = noun_list(reply)
-    t_list = content_list(tweet)
-    r_list = content_list(reply)
+    t_list = noun_list(tweet)
+    r_list = noun_list(reply)
     for x in xrange(0, len(t_list) - 1):
         if t_list[x] in dic:
             dic[t_list[x]][t_list[x + 1]] += 1
@@ -45,10 +43,19 @@ def make_dic(tweet, reply, dic):
             dic[r_list[x]] = defaultdict(int)
             dic[r_list[x]][r_list[x + 1]] += 1
 
+
+def remove_twitter_id(text):
+    ids = re.findall(r'@\w+',text)
+    for id in ids:
+        text = text.replace(id, '')
+    #先頭のreply_idの直後にwhite_spaceが残るので削除
+    return text.replace(' ','')
+
 def noun_list(text):
     arr = []
     content = [r'固有名詞', r'一般', r'サ変動詞', r'形容動詞語幹']
     tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
+    text = remove_twitter_id(text)
     encode_text = text.encode('utf-8')
     node = tagger.parseToNode(encode_text)
     while node:
