@@ -1,12 +1,31 @@
 # -*- coding: utf-8 -*-
 
+import MeCab
 
-# <teamID>-J-R[priority].txt
-# <SYSDESC>[insert a short description in English here]</SYSDESC>
-# [TweetID] 0 [RetrievedTweetID] [Rank] [Score][RunName]\n
+import sqlconfig
+from sqltostc import read_table
+
+
+def noun_list(text):
+    arr = []
+    tagger = MeCab.Tagger("-Ochasen -d /usr/local/lib/mecab/dic/mecab-ipadic-neologd")
+    encode_text = text.encode('utf-8')
+    node = tagger.parseToNode(encode_text)
+    while node:
+        feature = node.feature
+        speech = feature.split(",")[0]
+        if speech in [r'名詞']:
+            arr.append(node.surface)
+        node = node.next
+    return arr
 
 
 class RunFile():
+    """
+    <teamID>-J-R[priority].txt
+    <SYSDESC>[insert a short description in English here]</SYSDESC>
+    [TweetID] 0 [RetrievedTweetID] [Rank] [Score][RunName]
+    """
 
     def __init__(self, team_id, priority):
         self.team_id = team_id
@@ -31,3 +50,29 @@ class RunFile():
             lines = [format_for_stc(result) for result in self.results]
             text = '\n'.join(lines)
             f.write(text)
+
+
+class Tweet():
+    """Tweet class For Debug"""
+
+    def __init__(self, item_id):
+        if not self.get_and_set_tweet('test_tweets', item_id):
+            self.get_and_set_tweet('stc_tweets', item_id)
+
+    def get_and_set_tweet(self, table_name, item_id):
+        query = 'select * from {0} where item_id = {1}'.format(table_name, item_id)
+        rows = read_table(query)
+        if len(rows) is 1:
+            self.set_tweet(rows[0])
+            return True
+        else:
+            return False
+
+    def set_tweet(self, row):
+        self.id = row[0]
+        self.success = row[1]
+        self.item_id = row[2]
+        self.screen_name = row[3]
+        self.name = row[4]
+        self.time = row[5]
+        self.text = row[6]

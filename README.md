@@ -49,3 +49,26 @@ python make_index.py --file-path ./data/index.pkl --overwrite True
 ```
 
 [![https://gyazo.com/a651af765751687771e08cf4c7677a25](https://i.gyazo.com/a651af765751687771e08cf4c7677a25.png)](https://gyazo.com/a651af765751687771e08cf4c7677a25)
+
+## Debug
+
+### Tokenized Text
+
+```
+python check_tweet.py --help
+usage: check_tweet.py [-h] ids [ids ...]
+
+positional arguments:
+  ids
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+e.g.
+
+```
+python check_tweet.py 554564419162619904 472138319464108033
+```
+
+[![https://gyazo.com/521d906d267d5741249e532ec91c3391](https://i.gyazo.com/521d906d267d5741249e532ec91c3391.png)](https://gyazo.com/521d906d267d5741249e532ec91c3391)
