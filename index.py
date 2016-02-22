@@ -3,7 +3,7 @@
 import codecs
 from collections import defaultdict
 from six.moves import cPickle
-import nltk
+from collections import Counter
 
 
 class Indexer:
@@ -20,7 +20,7 @@ class Indexer:
             self.index = cPickle.load(f)
 
     def add(self, tweet_id, words):
-        vocab = nltk.FreqDist(words).items()
+        vocab = Counter(words).most_common()
         for (word, tf) in vocab:
             self.index[word].append((tweet_id, tf))
 
@@ -35,7 +35,7 @@ class Indexer:
             for item in tuples:
                 results[item[0]] += item[1] * score
         return results
-        
+
     def update_replies(self, results, tup, score):
         word = tup[0]
         score = tup[1] * score
