@@ -8,8 +8,6 @@ import logging
 import time
 from progressbar import ProgressBar, Percentage, Bar
 
-# import ipdb
-
 import sqlconfig
 from sqltostc import read_table
 from stcutils import Tweet, noun_list
