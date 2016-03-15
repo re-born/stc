@@ -1,0 +1,10 @@
+# papers/.gitignore
+
+# tex
+*.aux
+*.bbl
+*.blg
+*.synctex.gz
+
+# pdf
+*.pdf
