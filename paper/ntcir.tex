@@ -1,0 +1,162 @@
+\documentclass{sig-alternate}
+
+\makeatletter
+ \let\@copyrightspace\relax
+ \makeatother
+
+\begin{document}
+
+\title{CRUISE at the NTCIR-10 Mission Impossible Task}
+
+\numberofauthors{8} %  in this sample file, there are a *total* of EIGHT authors.
+\author{
+% You can go ahead and credit any number of authors here,
+% e.g. one 'row of three' or two rows (consisting of one row of three
+% and a second row of one, two or three).
+%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+% e-mail address with \email.
+%
+% 1st. author
+\alignauthor
+Tom A. Cruise\\
+       \affaddr{Disavowed, U.S.A}\\
+       \email{toma@cruise.com}
+% 2nd. author
+\alignauthor
+Tom B. Cruise\\
+       \affaddr{Disavowed, U.S.A}\\
+       \email{tomb@cruise.com}
+% 3rd. author
+\alignauthor 
+Tom C. Cruise\\
+       \affaddr{Disavowed, U.S.A}\\
+       \email{tomc@cruise.com}
+\and  % use '\and' if you need 'another row' of author names
+% 4th. author
+\alignauthor 
+Tom D. Cruise\\
+       \affaddr{Disavowed, U.S.A}\\
+       \email{tomd@cruise.com}
+% 5th. author
+\alignauthor 
+Tom E. Cruise\\
+       \affaddr{Disavowed, U.S.A}\\
+       \email{tome@cruise.com}
+% 6th. author
+\alignauthor 
+Tom F. Cruise\\
+       \affaddr{Disavowed, U.S.A}\\
+       \affaddr{The Last Samurai Corporation, Japan}\\
+       \email{tomf@cruise.com}
+}
+% There's nothing stopping you putting the seventh, eighth, etc.
+% author on the opening page (as the 'third row') but we ask,
+% for aesthetic reasons that you place these 'additional authors'
+% in the \additional authors block, viz.
+\additionalauthors{Additional authors: 
+Tom G. Cruise (Disavowed, U.S.A. email: {\texttt{tomg@cruise.com}}) and 
+Tom H. Cruise (Disavowed, U.S.A. email: {\texttt{tomh@cruise.com}}).}
+% Just remember to make sure that the TOTAL number of authors
+% is the number that will appear on the first page PLUS the
+% number that will appear in the \additionalauthors section.
+
+
+\maketitle
+
+\begin{abstract}
+The CRUISE team participated in the Climb the Dubai Tower (CDT) subtask of the NTCIR-10 Mission Impossible Task.
+This minority report describes our approach to solving the CDT problem and discusses the official results.
+\end{abstract}
+
+\section*{Team Name}
+CRUISE
+
+\section*{Subtasks}
+%Climb the Dubai Tower (Chinese)\\
+%Climb the Dubai Tower (English)\\
+%Climb the Dubai Tower (Japanese)
+Climb the Dubai Tower (Chinese, English, Japanese)
+
+\keywords{eyes wide shut, top gun}
+
+\section{Introduction}
+
+The CRUISE team participated in the Climb the Dubai Tower (CDT) subtask of the NTCIR-10 Mission Impossible Task~\cite{mioverview}.
+This minority report describes our approach to solving the CDT problem and discusses the official results.
+
+\section{Method}
+\subsection{RUN1}
+\subsection{RUN2}
+We adopt a method that using a word co-occurence network.
+This method has following 3 parts:
+\begin{enumerate}
+    \item Make Network
+    \item Extract Subnetwork
+    \item Output Rank Result
+\end{enumerate} 
+
+\subsubsection{Make Network}
+In this part, we make a word co-occurence network from pairs of post tweets and reply tweet.
+As well as in the previous section, the data has 0000000 tweets. 
+First, we analyze morphenom against all tweet pairs by MeCab. Then we extract pair of sets of noun words from each pair as \((W_{p}, W_{r})\). Wp or Wr contains a ordered word set which means faster word appear faster in the original tweet. And set \(V\) as an union of all pairs.
+
+\begin{enumerate}
+    \item \(W_{p} = (\omega_{p1}, \omega_{p2}, ... \omega_{pi} ... \omega_{pn}) \)
+    \item \(W_{r} = (\omega_{r1}, \omega_{r2}, ... \omega_{ri} ... \omega_{rn}) \)
+    \item \(V = \bigcup (W_{p}, W_{r})\)
+\end{enumerate}
+
+Using V as nodes, we make a directed graph. We make a path from the first word in some tweet to the next word in the tweet and from each word in \( W_{p} \) to all words in \(W_{r} \).
+
+\[E = \{(\omega_{1}, \omega_{2}) | \omega_{1}\in W_{p} \wedge \omega_{2}\in W_{r}\}
+\cup \{(\omega_{pi}, \omega_{p(i+1)}) | 0 < i < n-1\}
+\cup \{(\omega_{ri}, \omega_{r(i+1)}) | 0 < i < n-1\}
+\]
+
+At last a word co-occurence network G is defined like below:
+
+\[G := (V,E)\]
+
+This word network shows what word likely appear next to some word. In other words, it shows that how wrods close to each other. So, it represents word distribution which contains topic distribution.
+
+\subsubsection{Extract Subnetwork}
+Test tweet data is same as the data used in RUN1. As well as previous part, we extract set of noun words from each test tweet as \(W_{t} = (\omega_{t1}, \omega_{t2}, ... \omega_{ti} ... \omega_{tn})\).
+In this part, we extract subnetwork $G'_{i}$ which contains \(\omega_{ti}\) from $G$.
+If wti exists in V, pick up all nodes which is next to wti.
+
+\[V'_{i} = \omega_{ti} \cup \{\omega_{e} |  (\omega_{ti}, \omega_{e}) \in E\}\]
+\[E'_{i} = \{(\omega_{ti}, \omega_{e}) | (\omega_{ti}, \omega_{e}) \in E\} \]
+
+Finaly, we get a subnetwork G' like below:
+
+\[G'_{i} = (V'_{i}, E'_{i})\]
+
+\(G' = \bigcup G'_{i}\) represents potential topics of expected replies.
+
+\subsubsection{Output Rank Result}
+In this part, we get results for each $W_{t}$ using subnetworks we get previous part. We rank each possible reply using tf-idf like score and pagerank.
+
+First, we calculate pagerank for each word like below:
+
+\[PageRank(\omega_{ti}) = \]
+
+Then, we calculate final score with tf-idf like score.
+
+\begin{enumerate}
+    \item tc
+    \item l
+    \item idf
+\end{enumerate}
+
+\[Score_{TWEET} = tfidf(W_{t})\]
+
+\bibliographystyle{abbrv}
+
+\bibliography{ntcir}
+
+
+\end{document}
