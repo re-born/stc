@@ -141,11 +141,11 @@ Finaly, we get a subnetwork G' like below:
 \subsubsection{Output Rank Result}
 In this part, we get results for each $W_{t}$ using subnetworks we get previous part. We rank each possible reply using tf-idf like score and pagerank.
 
-First, we calculate pagerank for each word in $W_{t}$. With E(\omega_{k}) as the number of edges which has \omega_{k} as the start node, a pagerank is calculated like below:
+First, we calculate pagerank for each word in $W_{t}$. With $E(\omega_{k})$ as the number of edges which has $\omega_{k}$ as the start node, a pagerank is calculated like below:
 
 \[PR(\omega_{ti}) = (1-d)/N + \sum_{\omega_{k}\in V'_{i}} d(PR(\omega_{k})/E(\omega_{k}))\]
 
-Then, we calculate final score with tf-idf like score. T is a set of tweets which concludes \omega_{ti}. 
+Then, we calculate final score with tf-idf like score. T is a set of tweets which concludes $\omega_{ti}$. 
 
 \[P'_{i} = {W_{i} | W_{i} \in P \wedge \omega_{ti} \in W_{i}}\]
 
@@ -156,6 +156,9 @@ Then, we calculate final score with tf-idf like score. T is a set of tweets whic
 \end{enumerate}
 
 \[Score_{TWEET} = tfidf(W_{t})\]
+
+
+\subsubsection{Two types of system}
 
 \bibliographystyle{abbrv}
 
