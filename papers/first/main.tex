@@ -228,7 +228,9 @@ E = &\{(\omega_{1}, \omega_{2}) | \omega_{1}\in W_{p} \lor \omega_{2}\in W_{r}\}
 
 At last a word co-occurence network G is defined like below:
 
-\[G := (V,E)\]
+\begin{eqnarray}
+G := (V,E)
+\end{eqnarray}
 
 This word network shows what word likely appear next to some word. In other words, it shows that how wrods close to each other. So, it represents word distribution which contains topic distribution.
 
@@ -237,12 +239,12 @@ Test tweet data is same as the data used in RUN1. As well as previous part, we e
 In this part, we extract subnetwork $G'_{i}$ which contains \(\omega_{ti}\) from $G$.
 If wti exists in V, pick up all nodes which is next to wti.
 
-\[V'_{i} = \omega_{ti} \cup \{\omega_{e} |  (\omega_{ti}, \omega_{e}) \in E\}\]
-\[E'_{i} = \{(\omega_{ti}, \omega_{e}) | (\omega_{ti}, \omega_{e}) \in E\} \]
+\begin{eqnarray}V'_{i} = \omega_{ti} \cup \{\omega_{e} |  (\omega_{ti}, \omega_{e}) \in E\}\end{eqnarray}
+\begin{eqnarray}E'_{i} = \{(\omega_{ti}, \omega_{e}) | (\omega_{ti}, \omega_{e}) \in E\} \end{eqnarray}
 
 Finaly, we get a subnetwork G' like below:
 
-\[G'_{i} = (V'_{i}, E'_{i})\]
+\begin{eqnarray}G'_{i} = (V'_{i}, E'_{i})\end{eqnarray}
 
 \(G' = \bigcup G'_{i}\) represents potential topics of expected replies.
 
@@ -251,11 +253,11 @@ In this part, we get results for each $W_{t}$ using subnetworks we get previous 
 
 First, we calculate pagerank for each word in $W_{t}$. With $E(\omega_{k})$, which is the number of edges that has $\omega_{k}$ as the start node, a pagerank is calculated like below:
 
-\[PR(\omega_{ti}) = \frac{(1-d)}{N} + \sum_{\omega_{k}\in V'_{i}} d(\frac{PR(\omega_{k})}{E(\omega_{k})})\]
+\begin{eqnarray}PR(\omega_{ti}) = \frac{(1-d)}{N} + \sum_{\omega_{k}\in V'_{i}} d(\frac{PR(\omega_{k})}{E(\omega_{k})})\end{eqnarray}
 
 Then, we calculate final score with tf-idf like score. $P'$ is a set of tweets which concludes $\omega_{ti}$. 
 
-\[P'_{ij} = \{W_{j} | W_{j} \in P \wedge \omega_{ti} \in W_{j}\}\]
+\begin{eqnarray}P'_{ij} = \{W_{j} | W_{j} \in P \wedge \omega_{ti} \in W_{j}\}\end{eqnarray}
 
 And, we define $df$ as the number of tweets in $P'$, $N$ as the number of tweets in $P$, $l$ as the number of word in $W_{i}$, and tc as how many $\omega_{ti}$ appear in $W_{i}$.
 
@@ -269,7 +271,7 @@ And, we define $df$ as the number of tweets in $P'$, $N$ as the number of tweets
 
 Finaly, the score is caculated like below:
 
-\[Score_{W_{j}} = \sum_{i} \frac{l-tc+1}{l} idf PR(\omega_{ti})\]
+\begin{eqnarray}Score_{W_{j}} = \sum_{i} \frac{l-tc+1}{l} idf PR(\omega_{ti})\end{eqnarray}
 
 Following this score, our system return the rank list of $W_{j}$ against each test data $W_{t}$.
 
