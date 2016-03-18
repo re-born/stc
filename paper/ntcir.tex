@@ -113,7 +113,7 @@ First, we analyze morphenom against all tweet pairs by MeCab. Then we extract pa
 
 Using V as nodes, we make a directed graph. We make a path from the first word in some tweet to the next word in the tweet and from each word in \( W_{p} \) to all words in \(W_{r} \).
 
-\[E = \{(\omega_{1}, \omega_{2}) | \omega_{1}\in W_{p} \wedge \omega_{2}\in W_{r}\}
+\[E = \{(\omega_{1}, \omega_{2}) | \omega_{1}\in W_{p} \lor \omega_{2}\in W_{r}\}
 \cup \{(\omega_{pi}, \omega_{p(i+1)}) | 0 < i < n-1\}
 \cup \{(\omega_{ri}, \omega_{r(i+1)}) | 0 < i < n-1\}
 \]
@@ -143,17 +143,18 @@ In this part, we get results for each $W_{t}$ using subnetworks we get previous 
 
 First, we calculate pagerank for each word in $W_{t}$. With $E(\omega_{k})$, which is the number of edges that has $\omega_{k}$ as the start node, a pagerank is calculated like below:
 
-\[PR(\omega_{ti}) = (1-d)/N + \sum_{\omega_{k}\in V'_{i}} d(PR(\omega_{k})/E(\omega_{k}))\]
+\[PR(\omega_{ti}) = \frac{(1-d)}{N} + \sum_{\omega_{k}\in V'_{i}} d(\frac{PR(\omega_{k})}{E(\omega_{k})})\]
 
 Then, we calculate final score with tf-idf like score. $P'$ is a set of tweets which concludes $\omega_{ti}$. 
 
-\[P'_{j} = \{W_{j} | W_{j} \in P \wedge \omega_{ti} \in W_{j}\}\]
+\[P'_{ij} = \{W_{j} | W_{j} \in P \wedge \omega_{ti} \in W_{j}\}\]
 
 And, we define $df$ as the number of tweets in $P'$, $N$ as the number of tweets in $P$, $l$ as the number of word in $W_{i}$, and tc as how many $\omega_{ti}$ appear in $W_{i}$.
 
 \begin{enumerate}
-    \item $df_{i} = n(P')$
+    \item $df_{i} = n(P'_{ij})$
     \item $N = n(P)$
+    \item $idf = log \frac{N}{df} + 1$
     \item $l_{i} = n(W_{j})$
     \item $tc_{i} = n(\{\omega | \omega = \omega_{ti} \wedge \omega \in W_{j}\})$
 \end{enumerate}
