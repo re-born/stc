@@ -211,8 +211,8 @@ First, we analyze morphenom against all tweet pairs by MeCab. Then we extract pa
 \begin{enumerate}
     \item \(W_{p} = (\omega_{p1}, \omega_{p2}, ... \omega_{pi} ... \omega_{pn}) \)
     \item \(W_{r} = (\omega_{r1}, \omega_{r2}, ... \omega_{ri} ... \omega_{rn}) \)
-    \item \(P = {W | W \in \bigcup W_{p} \wedge W \in \bigcup W_{r}}\)
-    \item \(V = \bigcup (W_{p}, W_{r})\)
+    \item \(P = \{W | W \in \bigcup W_{p} \wedge W \in \bigcup W_{r}\}\)
+    \item \(V = \{\omega | \omega \in W \wedge W \in P\} \)
 \end{enumerate}
 
 Using V as nodes, we make a directed graph. We make a path from the first word in some tweet to the next word in the tweet and from each word in \( W_{p} \) to all words in \(W_{r} \).
