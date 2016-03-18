@@ -1,0 +1,47 @@
+This is JBibTeX, Version 0.33, based on BibTeX 0.99d (TeX Live 2016/W32TeX/dev)
+Capacity: max_strings=500000, hash_size=500000, hash_prime=425003
+The top-level auxiliary file: ntcir.aux
+The style file: abbrv.bst
+Database file #1: ntcir.bib
+You've used 1 entry,
+            2118 wiz_defined-function locations,
+            503 strings with 3835 characters,
+and the built_in function-call counts, 403 in all, are:
+= -- 36
+> -- 13
+< -- 1
++ -- 5
+- -- 4
+* -- 23
+:= -- 65
+add.period$ -- 3
+call.type$ -- 1
+change.case$ -- 5
+chr.to.int$ -- 0
+cite$ -- 1
+duplicate$ -- 19
+empty$ -- 38
+format.name$ -- 4
+if$ -- 91
+int.to.chr$ -- 0
+int.to.str$ -- 1
+missing$ -- 1
+newline$ -- 8
+num.names$ -- 2
+pop$ -- 8
+preamble$ -- 1
+purify$ -- 4
+quote$ -- 0
+skip$ -- 15
+stack$ -- 0
+substring$ -- 23
+swap$ -- 7
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 4
+warning$ -- 0
+while$ -- 4
+width$ -- 2
+write$ -- 13
+is.kanji.str$ -- 0
