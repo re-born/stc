@@ -27,7 +27,7 @@
 
 \begin{document}
 
-\title{SLSTC at the NTCIR-12 Task}
+\title{SLSTC at the NTCIR-12 Stc Task}
 
 \numberofauthors{5}
 \author{
@@ -73,7 +73,7 @@ Tetsuya Sakai\\
 \maketitle
 
 \begin{abstract}
-The SLSTC team participated in the Short Text Conversation (STC) subtask of the NTCIR-12 Mission Impossible Task.
+The SLSTC team participated in the Short Text Conversation (STC) task at NTCIR-12 Task.
 This minority report describes our approach to solving the STC problem and will discuss the official results.
 \end{abstract}
 
@@ -118,7 +118,7 @@ and lists up future work items.
 
 This experiment can be divided in following 4 parts: 1st parts of generating distributed representation, 2nd of processing train data, 3rd of training and 4th of applying system learned and evaluation. In this section details of these are shown below.
 
-\subsubsection{Distributed Representation Generating Part}
+\subsubsection{Distributed Representation Generating Module}
 
 There is a tool for generate distributed representation of words called Word2Vec\cite{word2vec}.
 Word2Vec is announced by Google in 2013 and attracted researchers’ attention all over the world.
@@ -126,7 +126,7 @@ Input a corpus, Word2Vec generates vectors for each word in the corpus.
 Words which have close meaning have close vectors to each other.
 In this research, Wikipedia in Japanese and Nicopedia (Niconico Daihyakka in Japanese) corpus were used to generate distributed representation, to apply to somehow casual representation in sentences.
 
-\subsubsection{Train Data Processing Part}
+\subsubsection{Train Data Processing Module}
 
 Dataset is provided by NTCIR-12 STC Task.
 From this dataset, 427200 pairs of post tweet and reply tweet were obtained (maybe some were deleted).
@@ -142,7 +142,7 @@ The vector representation of tweet $ t $ is calculated by:
 Note that $ f(t,i) = e^{\frac{|l|}{i}} $ if $ i $ th morpheme in $ t $ is content word and  if otherwise.
 This is to emphasize weight of content words.
 
-\subsubsection{Learning Part}
+\subsubsection{Learning Module}
 
 In this research, process to make valid reply for given post is considered as a translation by Hierarchical Neural network (HNN) , which has 3 layers.
 In this part, weight matrices in the HNN is learned by Error Back Propagation method\cite{bahman}.
@@ -181,7 +181,7 @@ All data were divided into 3 groups and tested in the scheme shown in table \ref
   \end{tabular}
 \end{table}
 
-\subsubsection{Applying and Evaluating Part}
+\subsubsection{Applying and Evaluating Module}
 \label{sec:applying}
 
 For each posts in each test case, five reply candidates, which has from 1st to 5th smallest error to its output are suggested.
@@ -195,6 +195,91 @@ For each posts in each test case, five reply candidates, which has from 1st to 5
 \end{figure}
 
 \subsection{SLSTC-J-R2 and SLSTC-J-R3}
+We adopt a method that using a word co-occurence network.
+This method has following 3 parts:
+\begin{enumerate}
+    \item Making Network
+    \item Extracting Subnetwork
+    \item Output Rank Result
+\end{enumerate} 
+
+\subsubsection{Making Network}
+In this part, we make a word co-occurence network from pairs of post tweets and reply tweet.
+As we have already told in the previous section, the data has 427200 tweets. 
+First, we analyze morphenom against all tweet pairs by MeCab. Then we extract pair of sets of noun words from each pair as \((W_{p}, W_{r})\). Wp or Wr contains a ordered word set which means faster word appear faster in the original tweet. And set \(V\) as an union of all pairs.
+
+\begin{enumerate}
+    \item \(W_{p} = (\omega_{p1}, \omega_{p2}, ... \omega_{pi} ... \omega_{pn}) \)
+    \item \(W_{r} = (\omega_{r1}, \omega_{r2}, ... \omega_{ri} ... \omega_{rn}) \)
+    \item \(P = \{W | W \in \bigcup W_{p} \wedge W \in \bigcup W_{r}\}\)
+    \item \(V = \{\omega | \omega \in W \wedge W \in P\} \)
+\end{enumerate}
+
+Using V as nodes, we make a directed graph. We make a path from the first word in some tweet to the next word in the tweet and from each word in \( W_{p} \) to all words in \(W_{r} \).
+
+\begin{eqnarray}
+\begin{split}
+E = &\{(\omega_{1}, \omega_{2}) | \omega_{1}\in W_{p} \lor \omega_{2}\in W_{r}\}\\
+&\cup \{(\omega_{pi}, \omega_{p(i+1)}) | 0 < i < n-1\}\\
+&\cup \{(\omega_{ri}, \omega_{r(i+1)}) | 0 < i < n-1\}
+\end{split}
+\end{eqnarray}
+
+
+At last a word co-occurence network G is defined like below:
+
+\begin{eqnarray}
+G := (V,E)
+\end{eqnarray}
+
+This word network shows what word likely appear next to some word. In other words, it shows that how wrods close to each other. So, it represents word distribution which contains topic distribution.
+
+\subsubsection{Extracting Subnetwork}
+Test tweet data is same as the data used in RUN1. As well as previous part, we extract set of noun words from each test tweet as \(W_{t} = (\omega_{t1}, \omega_{t2}, ... \omega_{ti} ... \omega_{tn})\).
+In this part, we extract subnetwork $G'_{i}$ which contains \(\omega_{ti}\) from $G$.
+If wti exists in V, pick up all nodes which is next to wti.
+
+\begin{eqnarray}V'_{i} = \omega_{ti} \cup \{\omega_{e} |  (\omega_{ti}, \omega_{e}) \in E\}\end{eqnarray}
+\begin{eqnarray}E'_{i} = \{(\omega_{ti}, \omega_{e}) | (\omega_{ti}, \omega_{e}) \in E\} \end{eqnarray}
+
+Finaly, we get a subnetwork G' like below:
+
+\begin{eqnarray}G'_{i} = (V'_{i}, E'_{i})\end{eqnarray}
+
+\(G' = \bigcup G'_{i}\) represents potential topics of expected replies.
+
+\subsubsection{Output Rank Result}
+In this part, we get results for each $W_{t}$ using subnetworks we get previous part. We add score to each possible reply using the score like tf-idf and pagerank\cite{pagerank}.
+
+First, we calculate pagerank for each word in $W_{t}$. With $E(\omega_{k})$, which is the number of edges that has $\omega_{k}$ as the start node, a pagerank is calculated. And $d$ is some parameter set $0.9$ in our experiment.
+
+\begin{eqnarray}PR(\omega_{ti}) = \frac{(1-d)}{N} + \sum_{\omega_{k}\in V'_{i}} d(\frac{PR(\omega_{k})}{E(\omega_{k})})\end{eqnarray}
+
+Then, we calculate final score with tf-idf like score. $P'$ is a set of tweets which concludes $\omega_{ti}$. 
+
+\begin{eqnarray}P'_{ij} = \{W_{j} | W_{j} \in P \wedge \omega_{ti} \in W_{j}\}\end{eqnarray}
+
+And, we define $df$ as the number of tweets in $P'$, $N$ as the number of tweets in $P$, $l$ as the number of word in $W_{i}$, and tc as how many $\omega_{ti}$ appear in $W_{i}$.
+
+\begin{enumerate}
+    \item $df_{i} = n(P'_{ij})$
+    \item $N = n(P)$
+    \item $idf = \log_{10} \frac{N}{df} + 1$
+    \item $l_{i} = n(W_{j})$
+    \item $tc_{i} = n(\{\omega | \omega = \omega_{ti} \wedge \omega \in W_{j}\})$
+\end{enumerate}
+
+Finaly, the score is caculated like below:
+
+\begin{eqnarray}Score(W_{j}) = \sum_{i} \frac{l-tc+1}{l} idf PR(\omega_{ti})\end{eqnarray}
+
+Following this score, our system return the rank list of $W_{j}$ against each test data $W_{t}$.
+
+\subsubsection{Two types of system}
+  We analyzed result of this run. We considered that continuous ``w'' was noise. So, we remove morpheme include continuous ``w''.
+  Our submition of Run2 is type of not removed ``w'', and Run3 is type of removed ``w''.
+
+
 
 \section{Official Results and Discussions}
 \label{sec:results}
@@ -208,6 +293,8 @@ For each posts in each test case, five reply candidates, which has from 1st to 5
 \bibitem{word2vec} Google Word2Vec， https://code.google.com/p/word2vec/
 \bibitem{mecab} MeCab， http://taku910.github.io/mecab/
 \bibitem{bahman} Bahman Kermanshahi， Construction and Application of Neural Network，Shokodo
+\bibitem{pagerank} Sergey Brin, Rajeev Motwani, and Terry Winograd. What can you do with a
+web in your pocket. Data Engineering Bulletin, Vol. 21, pp. 37-47, 1998.
 
 \end{thebibliography}
 
