@@ -276,6 +276,7 @@ Finaly, the score is caculated like below:
 Following this score, our system return the rank list of $W_{j}$ against each test data $W_{t}$.
 
 \subsubsection{Two types of system}
+
   We analyzed result of this run. We considered that continuous ``w'' was noise. So, we remove morpheme include continuous ``w''.
   Our submition of Run2 is type of not removed ``w'', and Run3 is type of removed ``w''.
 
@@ -283,9 +284,24 @@ Following this score, our system return the rank list of $W_{j}$ against each te
 
 \section{Official Results and Discussions}
 \label{sec:results}
+Table 1 shows the results of our systems, the maximam score of the other systems and the minimum score ot the other systems. 
+"（Accurancy の違いの説明）"
+
+From the results, our systems seems not to work. To know what kind of trouble exists in our system, we analyze details of the results.
+
+
+Figure 1 shwos what tweet appear frequently as a possible reply. This figure indicates our system provide a nealy same set of tweets as possible replies. So, our results does not connect to inputs strongly. Something is wrong wiht our scoring system. For, we analyzed the structure of subnetworks and its pagerank, TF and IDF.
+Figure 2 and 3 show what words are enabled as a input and what words are in a subnetwork for each input. 
+The accurancy of the output for both tweets are relatively low: 0.04 for previous one, 0.16 for later one. "The accurancy is......." But, previous words seems to be related with inputs. For example, in input words, "各駅停車" and "神戸三宮" are some kind of words related to transpotation facility. And, in subnetwork, "バスターミナル" is also a word related to transpotation facility. Why is accurancy low? We think this is caused too low pagerank. There are too many words in subnetwork. That makes pagerank too low. That means all scores of the output tweets is directly reflected TF and IDF.
+On the other hands, later words seems not to be related with inputs.  To begin with, the words "さんが", "プラス", "して" seem to indicate no topics. This problem is occured in analyzing morphenom.
+
+So, in both cases, the results of our system is not reflected input topics むしろ、単純に頻度に関する情報だけが影響しており、かつサブネットワークが非常に多くの単語を含んでいるために、似たようなツイートばかり出力する結果となった。
 
 \section{Conclusions and Future Work}
 \label{sec:conclusions}
+
+我々は、NNを使ったシステムと狂気ネットワークをつかったシステムにより、応答システムの構築を試みた。今回のタスクでは、芳しい結果は得られなかったが、以下のような洞察を得た。
+共起ネットワークでは、形態素解析の改善と、サブネットワーク生成の改善を行う必要があるだろう。形態素解析いついていうならば、辞書の改善や未知語への対応が課題として挙げられる。サブネットワークの生成関しては、サブネットワークのエッジを減らすために、エッジに何らかしらの重みをつけ閾値を設けることや、そもそも共起ネットワークの生成時に単語間のエッジを抑制するこなどの対応が必要である。重みや抑制の方法については今後の課題である。
 
 \begin{thebibliography}{99}
 
