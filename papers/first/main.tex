@@ -295,12 +295,17 @@ Figure 2 and 3 show what words are enabled as a input and what words are in a su
 The accurancy of the output for both tweets are relatively low: 0.04 for previous one, 0.16 for later one. "The accurancy is......." But, previous words seems to be related with inputs. For example, in input words, "各駅停車" and "神戸三宮" are some kind of words related to transpotation facility. And, in subnetwork, "バスターミナル" is also a word related to transpotation facility. Why is accurancy low? We think this is caused too low pagerank. There are too many words in subnetwork. That makes pagerank too low. That means all scores of the output tweets is directly reflected TF and IDF.
 On the other hands, later words seems not to be related with inputs.  To begin with, the words "さんが", "プラス", "して" seem to indicate no topics. This problem is occured in analyzing morphenom.
 
-So, in both cases, the results of our system is not reflected input topics むしろ、単純に頻度に関する情報だけが影響しており、かつサブネットワークが非常に多くの単語を含んでいるために、似たようなツイートばかり出力する結果となった。
+So, in both cases, the results of our system is not reflected input topics.Instead, the data only about frequency effects the results. And each subnetwork contains a lot of words. So, our system outputs almost the same set of tweets. むしろ、単純に頻度に関する情報だけが影響しており、かつサブネットワークが非常に多くの単語を含んでいるために、似たようなツイートばかり出力する結果となった。
 
 \section{Conclusions and Future Work}
 \label{sec:conclusions}
-
+We made systems with Neural Network or word co-occurence network. In this task, we didn't get good results but few conclusions like below.
 我々は、NNを使ったシステムと狂気ネットワークをつかったシステムにより、応答システムの構築を試みた。今回のタスクでは、芳しい結果は得られなかったが、以下のような洞察を得た。
+
+For the system using a word co-occurence network, we need to improve accuranct of morpheme analysis and the mothods for generating subnetwork.
+In particular, for analyzing morphenom, we will try to improve teh accurancy of dictionary or to handle appropriately newer or unknown words. And, for decreasing tne number of edges of nodes in each subnetwork, we will try to cut the edge following something weight of the edge or to set strict condition on generating edges in a word co-occurence network.
+
+
 共起ネットワークでは、形態素解析の改善と、サブネットワーク生成の改善を行う必要があるだろう。形態素解析いついていうならば、辞書の改善や未知語への対応が課題として挙げられる。サブネットワークの生成関しては、サブネットワークのエッジを減らすために、エッジに何らかしらの重みをつけ閾値を設けることや、そもそも共起ネットワークの生成時に単語間のエッジを抑制するこなどの対応が必要である。重みや抑制の方法については今後の課題である。
 
 \begin{thebibliography}{99}
