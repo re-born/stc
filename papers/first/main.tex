@@ -290,12 +290,12 @@ Table 1 shows the results of our systems, the maximam score of the other systems
 From the results, our systems seem not to work. To know what kind of trouble occures in our system, we analyzed details of the results.
 
 
-Figure 1 shwos what tweet appeared frequently as a possible reply. This figure indicates our system provide a nealy same set of tweets as possible replies. So, our results doesn't relate to inputs strongly. Something is wrong with our scoring algorithms. For, we analyzed the structure of subnetworks and its pagerank, TF and IDF.
+Figure 1 shows what tweet appeared frequently as a possible reply. This figure indicates our system provide a nealy same set of tweets as possible replies. So, our results doesn't relate to inputs strongly. Something is wrong with our scoring algorithms. For, we analyzed the structure of subnetworks and its pagerank, TF and IDF.
 
 
 Figure 2 and 3 show what words are enabled as a input and what words appear in a subnetwork for each input.
-The accuracy of both outputs are relatively low: 0.04 for the former one, 0.16 for the latter one in "AC12-5". But, the words in the former result seem to be connected to inputs. For example, in input words, "各駅停車" and "神戸三宮" are words related to transpotation facility. And, in the subnetwork, "バスターミナル" is also a word related to transpotation facility. Why is accuracy low? We think this is caused by too many words in each subnetwork. Too many words in a subnetwork makes too low pagerank for each word. That means all scores of the output tweets reflect TF and IDF directly.
-On the other hands, the words in the latter result seem not to be connected to inputs. To begin with, the words "さんが", "プラス", "して" seem to indicate no topics. The system failed to analyze morphenom appropriately.
+The accuracy of both outputs are relatively low: 0.04 for the former one, 0.16 for the latter one in "AC12-5". But, the words in the former result seem to be connected to inputs. For example, in input words, \mbox{"各駅停車"} and \mbox{"神戸三宮"} are words related to transpotation facility. And, in the subnetwork, \mbox{"バスターミナル"} is also a word related to transpotation facility. Why is accuracy low? We think this is caused by too many words in each subnetwork. Too many words in a subnetwork makes too low pagerank for each word. That means all scores of the output tweets reflect TF and IDF directly.
+On the other hands, the words in the latter result seem not to be connected to inputs. To begin with, the words \mbox{"さんが"}, \mbox{"プラス"}, \mbox{"して"} seem to indicate no topics. The system failed to analyze morphenom appropriately.
 
 So, in both cases, the results of our system doesn't reflect input topics. Instead, the data only about the frequency of words effects the results. So, our system outputs almost the same set of tweets.
 
