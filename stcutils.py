@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import os.path
 import re
 import MeCab
+from collections import defaultdict
 
 import sqlconfig
 from sqltostc import read_table
+
 
 class RunFile():
     """
@@ -21,21 +24,75 @@ class RunFile():
     def set_desc(self, text):
         self.description = text
 
-    def add(self, result):
-        self.results.append(result)
+    def add_text_to_results(self, tweet_dic):
+        for input_id in self.results:
+            for rank in self.results[input_id]["replies"]:
+                output_id = self.results[input_id]["replies"][rank]["tweet_id"]
+                output_text = tweet_dic[output_id]
+                self.results[input_id]["replies"][rank]["text"] = output_text
 
-    def format_for_stc(result):
-        # TODO
-        # convert result to formated text
-        return text_formated
+            # May be, tweet_dic not includes tweets of testdata
+            self.results[input_id]["text"] = Tweet(input_id).text
 
-    def save(self):
-        filename = '{0}-J-R{1}.txt'.format(self.team_id, self.priority)
-        with open(filename, 'wb') as f:
-            f.write('<SYSDESC>{}</SYSDESC>\n'.format(self.description))
-            lines = [format_for_stc(result) for result in self.results]
-            text = '\n'.join(lines)
-            f.write(text)
+    def add_label_to_results(self, label_dic):
+        for input_id in self.results:
+            for rank in self.results[input_id]["replies"]:
+                output_id = self.results[input_id]["replies"][rank]["tweet_id"]
+                if label_dic[input_id].has_key(output_id):
+                    self.results[input_id]["replies"][rank][
+                        "labels"] = label_dic[input_id][output_id]
+
+    @staticmethod
+    def load(file_path):
+        if not os.path.isfile(file_path):
+            return false
+
+        file_name = os.path.basename(file_path)
+        team_id = file_name[:5]
+        priority = file_name[9:10]
+        run = RunFile(team_id, priority)
+
+        f = open(file_path)
+        lines = f.readlines()
+        f.close()
+
+        results = defaultdict(dict)
+        for line in lines[1:]:
+            data = line.split()
+            input_id = data[0]
+            output_id = data[2]
+            rank = data[3]
+            score = data[4]
+            if not results[input_id].has_key("replies"):
+                results[input_id]["replies"] = {}
+            results[input_id]["replies"][rank] = {
+                "tweet_id": output_id,
+                "score": score
+            }
+
+        run.results = results
+        return run
+
+
+class Label(defaultdict):
+
+    def __init__(self, file_path):
+        defaultdict.__init__(self, dict)
+        self.src = file_path
+
+        if not os.path.isfile(file_path):
+            return
+
+        f = open(file_path)
+        lines = f.readlines()
+        f.close()
+
+        for line in lines:
+            data = line.replace("\n", "").split("\t")
+            input_id = data[0]
+            output_id = data[1]
+            labels = data[2:]
+            self[input_id][output_id] = labels
 
 
 class Tweet():
