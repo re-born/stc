@@ -284,7 +284,7 @@ Following this score, our system return the rank list of $W_{j}$ against each te
 
 \section{Official Results and Discussions}
 \label{sec:results}
-Table 1 shows the results of our systems, the maximam score of the other systems and the minimum score of the other systems. 
+Table \ref{tab:results} shows the results of our systems, the maximam score of the other systems and the minimum score of the other systems. 
 "ACX-Y" means that X indicates what score is regarded as true output and Y indicates the range of the acceptable rank. For example, "AC12-1" means that the outputs scored 1 or 2 and having top rank is evaluated.
 
 From the results, our systems seem not to work. To know what kind of trouble occures in our system, we analyzed details of the results.
@@ -298,6 +298,22 @@ The accuracy of both outputs are relatively low: 0.04 for the former one, 0.16 f
 On the other hands, the words in the latter result seem not to be connected to inputs. To begin with, the words "さんが", "プラス", "して" seem to indicate no topics. The system failed to analyze morphenom appropriately.
 
 So, in both cases, the results of our system doesn't reflect input topics. Instead, the data only about the frequency of words effects the results. So, our system outputs almost the same set of tweets.
+
+\begin{table}[h!]
+  \centering
+  \caption{The results}
+  \label{tab:results}
+  \begin{tabular}{|c|c|c|c|c|} \hline
+    　 & AC2-1 & AC2-5 & AC12-1 & AC12-5 \\ \hline
+    　SLSTC-J-R1 & 0.0381 & 0.0364 & 0.1644 & 0.1650 \\ \hline
+      SLSTC-J-R2 & 0.0782 & 0.0332 & 0.3416 & 0.1795\\ \hline
+      SLSTC-J-R3 & 0.0054 & 0.0032 & 0.0391 & 0.0196\\ \hline
+      MAX & 0.4574 & 0.3583 & 0.7817 & 0.7050\\ \hline
+      MIN & 0.0054 & 0.0032 & 0.0391 & 0.0196\\ \hline
+  \end{tabular}
+\end{table}
+
+
 
 \section{Conclusions and Future Work}
 \label{sec:conclusions}
