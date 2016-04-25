@@ -132,8 +132,8 @@ network construction, subnetwork extraction, and ranked output generation.
 
 \subsubsection{Network Construction}
 In this part, we make a word co-occurrence network from pairs of post tweets and reply tweet.
-As we have already told in the previous section, the data has 427200 tweets. 
-First, we analyze morphenom against all tweet pairs by MeCab. Then we extract pair of sets of noun words from each pair as \((W_{p}, W_{r})\). Wp or Wr contains a ordered word set which means faster word appear faster in the original tweet. And set \(V\) as an union of all pairs.
+As the datset, 427200 pairs of post tweet and reply tweet are provided from NTCIR.
+First, we analyze morphenom against all tweet pairs by MeCab\cite{mecab}. Then we extract pair of sets of noun words from each pair as \((W_{p}, W_{r})\). Wp or Wr contains a ordered word set which means faster word appear faster in the original tweet. And set \(V\) as an union of all pairs.
 
 \begin{enumerate}
     \item \(W_{p} = (\omega_{p1}, \omega_{p2}, ... \omega_{pi} ... \omega_{pn}) \)
