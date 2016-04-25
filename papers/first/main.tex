@@ -73,7 +73,8 @@ Tetsuya Sakai\\
 \maketitle
 
 \begin{abstract}
-The SLSTC team participated in the Short Text Conversation (STC) task at NTCIR-12 Task.
+The SLSTC team participated in the NTCIR-12 Short Text Conversation
+(STC) task.
 This report describes our approach to solving the STC problem and will discuss the official results.
 \end{abstract}
 
@@ -81,9 +82,9 @@ This report describes our approach to solving the STC problem and will discuss t
 SLSTC
 
 \section*{Subtasks}
-Short Text Conversation (Japanese)
+Japanese subtask
 
-\keywords{STC,HNN,Word2Vec,pagerank,word co-occurrence network}
+\keywords{STC; HNN; Word2Vec; PageRank; word co-occurrence network}
 
 \section{Introduction}
 
@@ -203,7 +204,7 @@ This method has following 3 parts:
     \item Output Rank Result
 \end{enumerate} 
 
-\subsubsection{Making Network}
+\subsubsection{Network Construction}
 In this part, we make a word co-occurrence network from pairs of post tweets and reply tweet.
 As we have already told in the previous section, the data has 427200 tweets. 
 First, we analyze morphenom against all tweet pairs by MeCab. Then we extract pair of sets of noun words from each pair as \((W_{p}, W_{r})\). Wp or Wr contains a ordered word set which means faster word appear faster in the original tweet. And set \(V\) as an union of all pairs.
@@ -234,7 +235,7 @@ G := (V,E)
 
 This word network shows what word likely appear next to some word. In other words, it shows that how wrods close to each other. So, it represents word distribution which contains topic distribution.
 
-\subsubsection{Extracting Subnetwork}
+\subsubsection{Subnetwork Extraction}
 Test tweet data is same as the data used in RUN1. As well as previous part, we extract set of noun words from each test tweet as \(W_{t} = (\omega_{t1}, \omega_{t2}, ... \omega_{ti} ... \omega_{tn})\).
 In this part, we extract subnetwork $G'_{i}$ which contains \(\omega_{ti}\) from $G$.
 If wti exists in V, pick up all nodes which is next to wti.
@@ -248,10 +249,10 @@ Finaly, we get a subnetwork G' like below:
 
 \(G' = \bigcup G'_{i}\) represents potential topics of expected replies.
 
-\subsubsection{Output Rank Result}
-In this part, we get results for each $W_{t}$ using subnetworks we get previous part. We add score to each possible reply using the score like tf-idf and pagerank\cite{pagerank}.
+\subsubsection{Ranked Output Generation}
+In this part, we get results for each $W_{t}$ using subnetworks we get previous part. We add score to each possible reply using the score like tf-idf and PageRank\cite{PageRank}.
 
-First, we calculate pagerank for each word in $W_{t}$. With $E(\omega_{k})$, which is the number of edges that has $\omega_{k}$ as the start node, a pagerank is calculated. And $d$ is some parameter set $0.9$ in our experiment.
+First, we calculate PageRank for each word in $W_{t}$. With $E(\omega_{k})$, which is the number of edges that has $\omega_{k}$ as the start node, a PageRank is calculated. And $d$ is some parameter set $0.9$ in our experiment.
 
 \begin{eqnarray}PR(\omega_{ti}) = \frac{(1-d)}{N} + \sum_{\omega_{k}\in V'_{i}} d(\frac{PR(\omega_{k})}{E(\omega_{k})})\end{eqnarray}
 
@@ -290,11 +291,11 @@ Table \ref{tab:results} shows the results of our systems, the maximam score of t
 From the results, our systems seem not to work. To know what kind of trouble occures in our system, we analyzed details of the results.
 
 
-Table \ref{tab:frequency2} and Table \ref{tab:frequency3} shwo what tweet appeared frequently as a possible reply. This table indicates our system provide a nealy same set of tweets as possible replies. So, our results doesn't relate to inputs strongly. Something is wrong with our scoring algorithms. For, we analyzed the structure of subnetworks and its pagerank, TF and IDF.
+Table \ref{tab:frequency2} and Table \ref{tab:frequency3} shwo what tweet appeared frequently as a possible reply. This table indicates our system provide a nealy same set of tweets as possible replies. So, our results doesn't relate to inputs strongly. Something is wrong with our scoring algorithms. For, we analyzed the structure of subnetworks and its PageRank, TF and IDF.
 
 
 Figure 2 and 3 show what words are enabled as a input and what words appear in a subnetwork for each input.
-The accuracy of both outputs are relatively low: 0.04 for the former one, 0.16 for the latter one in "AC12-5". But, the words in the former result seem to be connected to inputs. For example, in input words, "各駅停車" and "神戸三宮" are words related to transpotation facility. And, in the subnetwork, "バスターミナル" is also a word related to transpotation facility. Why is accuracy low? We think this is caused by too many words in each subnetwork. Too many words in a subnetwork makes too low pagerank for each word. That means all scores of the output tweets reflect TF and IDF directly.
+The accuracy of both outputs are relatively low: 0.04 for the former one, 0.16 for the latter one in "AC12-5". But, the words in the former result seem to be connected to inputs. For example, in input words, "各駅停車" and "神戸三宮" are words related to transpotation facility. And, in the subnetwork, "バスターミナル" is also a word related to transpotation facility. Why is accuracy low? We think this is caused by too many words in each subnetwork. Too many words in a subnetwork makes too low PageRank for each word. That means all scores of the output tweets reflect TF and IDF directly.
 On the other hands, the words in the latter result seem not to be connected to inputs. To begin with, the words "さんが", "プラス", "して" seem to indicate no topics. The system failed to analyze morphenom appropriately.
 
 So, in both cases, the results of our system doesn't reflect input topics. Instead, the data only about the frequency of words effects the results. So, our system outputs almost the same set of tweets.
@@ -349,10 +350,10 @@ So, in both cases, the results of our system doesn't reflect input topics. Inste
 
 \begin{table*}
     \begin{center}
-    \caption{top 3 pagerank * IDF score words in subnetwork for some input}
+    \caption{top 3 PageRank * IDF score words in subnetwork for some input}
     \label{tab:subnetwork1}
     \begin{tabular}{|p{20em}|p{5em}|p{5em}|c|c|c|} \hline
-    input & noun & word & pagerank & IDF & pagerank*IDF\\ \hline
+    input & noun & word & PageRank & IDF & PageRank*IDF\\ \hline
     & & PCゲーム & 2.96e-5 & 4.75 & 0.000141\\ \cline{3-6}
     ゆうくりっどさんが言いたいことにプラスして言及してくれてた & さんが, プラス, して & トレシュー & 2.40e-5 & 5.23 & 0.000125\\ \cline{3-6}
     & & 女川 & 2.37e-5 & 5.23 & 0.000124\\ \hline
@@ -363,10 +364,10 @@ So, in both cases, the results of our system doesn't reflect input topics. Inste
 
 \begin{table*}
     \begin{center}
-    \caption{top 3 pagerank * IDF score words in subnetwork for some input}
+    \caption{top 3 PageRank * IDF score words in subnetwork for some input}
     \label{tab:subnetwork2}
     \begin{tabular}{|p{20em}|p{5em}|p{5em}|c|c|c|} \hline
-    input & noun & word & pagerank & IDF & pagerank*IDF\\ \hline
+    input & noun & word & PageRank & IDF & PageRank*IDF\\ \hline
     & & ゃんいってらっしゃいだよっ & 2.08e-5 & 5.23 & 0.000109\\ \cline{3-6}
     【自動】\newline お待たせしました。\newline 7号線、各駅停車、神戸三宮行き\newline ただいま発車します。 & 自動, 7号, 各駅停車, 神戸三宮 & バスターミナル & 1.87e-5 & 5.23 & 9.75e-5\\ \cline{3-6}
     & & PCゲーム & 1.87e-05 & 4.75 & 8.87e-5\\ \hline
@@ -387,7 +388,7 @@ In particular, for analyzing morphenom, we will try to improve the accuracy of d
 \bibitem{word2vec} Google Word2Vec， https://code.google.com/p/word2vec/
 \bibitem{mecab} MeCab， http://taku910.github.io/mecab/
 \bibitem{bahman} Bahman Kermanshahi， Construction and Application of Neural Network，Shokodo
-\bibitem{pagerank} Sergey Brin, Rajeev Motwani, and Terry Winograd. What can you do with a
+\bibitem{PageRank} Sergey Brin, Rajeev Motwani, and Terry Winograd. What can you do with a
 web in your pocket. Data Engineering Bulletin, Vol. 21, pp. 37-47, 1998.
 
 \end{thebibliography}
