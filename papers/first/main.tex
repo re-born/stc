@@ -76,7 +76,8 @@ Tetsuya Sakai\\
 \begin{abstract}
 The SLSTC team participated in the NTCIR-12 Short Text Conversation
 (STC) task.
-This report describes our approach to solving the STC problem and will discuss the official results.
+This report describes our approach to solving the STC problem and discusses the
+ocial results.
 \end{abstract}
 
 \section*{Team Name}
@@ -131,24 +132,24 @@ Our method is based on a word co-occurrence network, and it consists of three pa
 network construction, subnetwork extraction, and ranked output generation.
 
 \subsubsection{Network Construction}
-In this part, we make a word co-occurrence network from pairs of post tweets and reply tweet.
-As the datset, 427200 pairs of post tweet and reply tweet are provided from NTCIR.
-First, we analyze morphenom against all tweet pairs by MeCab\cite{mecab}. Then we extract pair of sets of noun words from each pair as \((W_{p}, W_{r})\). Wp or Wr contains a ordered word set which means faster word appear faster in the original tweet. And set \(V\) as an union of all pairs.
+In this part, we make a word co-occurrence network from post-reply tweet pairs.
+As the datset, 427200 post-reply tweet pairs are provided from NTCIR.
+First, we perform morphological analysis on the tweet pairs using MeCab\cite{mecab}. Then we extract pair of sets of noun words from each pair as \((W_{p}, W_{r})\). Wp or Wr contains a ordered word set which means faster word appear faster in the original tweet. And set \(V\) as an union of all pairs.
 
 \begin{enumerate}
-    \item \(W_{p} = (\omega_{p1}, \omega_{p2}, ... \omega_{pi} ... \omega_{pn}) \)
-    \item \(W_{r} = (\omega_{r1}, \omega_{r2}, ... \omega_{ri} ... \omega_{rn}) \)
+    \item \(W_{p} = (w_{p1}, w_{p2}, ... w_{pi} ... w_{pn}) \)
+    \item \(W_{r} = (w_{r1}, w_{r2}, ... w_{ri} ... w_{rn}) \)
     \item \(P = \{W | W \in \bigcup W_{p} \wedge W \in \bigcup W_{r}\}\)
-    \item \(V = \{\omega | \omega \in W \wedge W \in P\} \)
+    \item \(V = \{w | w \in W \wedge W \in P\} \)
 \end{enumerate}
 
 Using V as nodes, we make a directed graph. We make a path from the first word in some tweet to the next word in the tweet and from each word in \( W_{p} \) to all words in \(W_{r} \).
 
 \begin{eqnarray}
 \begin{split}
-E = &\{(\omega_{1}, \omega_{2}) | \omega_{1}\in W_{p} \lor \omega_{2}\in W_{r}\}\\
-&\cup \{(\omega_{pi}, \omega_{p(i+1)}) | 0 < i < n-1\}\\
-&\cup \{(\omega_{ri}, \omega_{r(i+1)}) | 0 < i < n-1\}
+E = &\{(w_{1}, w_{2}) | w_{1}\in W_{p} \lor w_{2}\in W_{r}\}\\
+&\cup \{(w_{pi}, w_{p(i+1)}) | 0 < i < n-1\}\\
+&\cup \{(w_{ri}, w_{r(i+1)}) | 0 < i < n-1\}
 \end{split}
 \end{eqnarray}
 
@@ -162,12 +163,12 @@ G := (V,E)
 This word network shows what word likely appear next to some word. In other words, it shows that how wrods close to each other. So, it represents word distribution which contains topic distribution.
 
 \subsubsection{Subnetwork Extraction}
-Test tweet data is same as the data used in RUN1. As well as previous part, we extract set of noun words from each test tweet as \(W_{t} = (\omega_{t1}, \omega_{t2}, ... \omega_{ti} ... \omega_{tn})\).
-In this part, we extract subnetwork $G'_{i}$ which contains \(\omega_{ti}\) from $G$.
+Test tweet data is same as the data used in RUN1. As well as previous part, we extract set of noun words from each test tweet as \(W_{t} = (w_{t1}, w_{t2}, ... w_{ti} ... w_{tn})\).
+In this part, we extract subnetwork $G'_{i}$ which contains \(w_{ti}\) from $G$.
 If wti exists in V, pick up all nodes which is next to wti.
 
-\begin{eqnarray}V'_{i} = \omega_{ti} \cup \{\omega_{e} |  (\omega_{ti}, \omega_{e}) \in E\}\end{eqnarray}
-\begin{eqnarray}E'_{i} = \{(\omega_{ti}, \omega_{e}) | (\omega_{ti}, \omega_{e}) \in E\} \end{eqnarray}
+\begin{eqnarray}V'_{i} = w_{ti} \cup \{w_{e} |  (w_{ti}, w_{e}) \in E\}\end{eqnarray}
+\begin{eqnarray}E'_{i} = \{(w_{ti}, w_{e}) | (w_{ti}, w_{e}) \in E\} \end{eqnarray}
 
 Finaly, we get a subnetwork G' like below:
 
@@ -178,27 +179,27 @@ Finaly, we get a subnetwork G' like below:
 \subsubsection{Ranked Output Generation}
 In this part, we get results for each $W_{t}$ using subnetworks we get previous part. We add score to each possible reply using the score like tf-idf and PageRank\cite{PageRank}.
 
-First, we calculate PageRank for each word in $W_{t}$. With $E(\omega_{k})$, which is the number of edges that has $\omega_{k}$ as the start node, a PageRank is calculated. And $d$ is some parameter set $0.9$ in our experiment.
+First, we calculate PageRank for each word in $W_{t}$. With $E(w_{k})$, which is the number of edges that has $w_{k}$ as the start node, a PageRank is calculated. And $d$ is some parameter set $0.9$ in our experiment.
 
-\begin{eqnarray}PR(\omega_{ti}) = \frac{(1-d)}{N} + \sum_{\omega_{k}\in V'_{i}} d(\frac{PR(\omega_{k})}{E(\omega_{k})})\end{eqnarray}
+\begin{eqnarray}PR(w_{ti}) = \frac{(1-d)}{N} + \sum_{w_{k}\in V'_{i}} d(\frac{PR(w_{k})}{E(w_{k})})\end{eqnarray}
 
-Then, we calculate final score with tf-idf like score. $P'$ is a set of tweets which concludes $\omega_{ti}$. 
+Then, we calculate final score with tf-idf like score. $P'$ is a set of tweets which concludes $w_{ti}$. 
 
-\begin{eqnarray}P'_{ij} = \{W_{j} | W_{j} \in P \wedge \omega_{ti} \in W_{j}\}\end{eqnarray}
+\begin{eqnarray}P'_{ij} = \{W_{j} | W_{j} \in P \wedge w_{ti} \in W_{j}\}\end{eqnarray}
 
-And, we define $df$ as the number of tweets in $P'$, $N$ as the number of tweets in $P$, $l$ as the number of word in $W_{i}$, and tc as how many $\omega_{ti}$ appear in $W_{i}$.
+And, we define $df$ as the number of tweets in $P'$, $N$ as the number of tweets in $P$, $l$ as the number of word in $W_{i}$, and tc as how many $w_{ti}$ appear in $W_{i}$.
 
 \begin{enumerate}
     \item $df_{i} = n(P'_{ij})$
     \item $N = n(P)$
     \item $idf = \log_{10} \frac{N}{df} + 1$
     \item $l_{i} = n(W_{j})$
-    \item $tc_{i} = n(\{\omega | \omega = \omega_{ti} \wedge \omega \in W_{j}\})$
+    \item $tc_{i} = n(\{w | w = w_{ti} \wedge w \in W_{j}\})$
 \end{enumerate}
 
 Finaly, the score is caculated like below:
 
-\begin{eqnarray}Score(W_{j}) = \sum_{i} \frac{l-tc+1}{l} idf PR(\omega_{ti})\end{eqnarray}
+\begin{eqnarray}Score(W_{j}) = \sum_{i} \frac{l-tc+1}{l} idf PR(w_{ti})\end{eqnarray}
 
 Following this score, our system return the rank list of $W_{j}$ against each test data $W_{t}$.
 
@@ -212,20 +213,20 @@ Following this score, our system return the rank list of $W_{j}$ against each te
 \section{Official Results and Discussions}
 \label{sec:results}
 Table \ref{tab:results} shows the results of our systems, the maximam score of the other systems and the minimum score of the other systems. 
-"ACX-Y" means that X indicates what score is regarded as true output and Y indicates the range of the acceptable rank. For example, "AC12-1" means that the outputs scored 1 or 2 and having top rank is evaluated.
+``ACX-Y'' means that X indicates what score is regarded as true output and Y indicates the range of the acceptable rank. For example, ``AC12-1'' means that the outputs scored 1 or 2 and having top rank is evaluated.
 
 From the results, our systems seem not to work. To know what kind of trouble occures in our system, we analyzed details of the results.
 
 
-Figure \ref{fig:run2} and fiqure \ref{fig:run3} show what tweet appeared frequently as a possible reply. This table indicates our system provide a nealy same set of tweets as possible replies. So, our results doesn't relate to inputs strongly. Something is wrong with our scoring algorithms. For, we analyzed the structure of subnetworks and its PageRank, TF and IDF.
+Figure \ref{fig:run2} and fiqure \ref{fig:run3} show what tweet appeared frequently as a possible reply. This table indicates our system provide a nealy same set of tweets as possible replies. So, our results does not relate to inputs strongly. Something is wrong with our scoring algorithms. For, we analyzed the structure of subnetworks and its PageRank, TF and IDF.
 
 
 Table \ref{tab:subnetwork1} and table \ref{tab:subnetwork2} show what words are enabled as a input and what words appear in a subnetwork for each input.
-The accuracy of both outputs are relatively low: 0.04 for the former one, 0.16 for the latter one in "AC12-5". But, the words in the former result seem to be connected to inputs. For example, in input words, \mbox{"各駅停車"} and \mbox{"神戸三宮"} are words related to transpotation facility. And, in the subnetwork, \mbox{"バスターミナル"} is also a word related to transpotation facility. Why is accuracy low? We think this is caused by too many words in each subnetwork. Too many words in a subnetwork makes too low PageRank for each word. That means all scores of the output tweets reflect TF and IDF directly.
-On the other hands, the words in the latter result seem not to be connected to inputs. To begin with, the words \mbox{"さんが"}, \mbox{"プラス"}, \mbox{"して"} seem to indicate no topics. The system failed to analyze morphenom appropriately.
+The accuracy of both outputs are relatively low: 0.04 for the former one, 0.16 for the latter one in ``AC12-5''. But, the words in the former result seem to be connected to inputs. For example, in input words, \mbox{``各駅停車''} and \mbox{``神戸三宮''} are words related to transpotation facility. And, in the subnetwork, \mbox{``バスターミナル''} is also a word related to transpotation facility. Why is accuracy low? We think this is caused by too many words in each subnetwork. Too many words in a subnetwork makes too low PageRank for each word. That means all scores of the output tweets reflect TF and IDF directly.
+On the other hands, the words in the latter result seem not to be connected to inputs. To begin with, the words \mbox{``さんが''}, \mbox{``プラス''}, \mbox{``して''} seem to indicate no topics. The system failed to perform morphological analysis appropriately.
 
 
-So, in both cases, the results of our system doesn't reflect input topics. Instead, the data only about the frequency of words effects the results. So, our system outputs almost the same set of tweets.
+So, in both cases, the results of our system does not reflect input topics. Instead, the data only about the frequency of words effects the results. So, our system outputs almost the same set of tweets.
 
 \begin{table}[h!]
   \centering
@@ -287,10 +288,10 @@ So, in both cases, the results of our system doesn't reflect input topics. Inste
 
 \section{Conclusions and Future Work}
 \label{sec:conclusions}
-We made systems with Neural Network or word co-occurrence network. In this task, we didn't get good results but few conclusions like below.
+We made systems with Neural Network or word co-occurrence network. In this task, we did not get good results but few conclusions like below.
 
-For the system using a word co-occurrence network, we need to improve accuracy of morpheme analysis and the mothod for generating subnetwork.
-In particular, for analyzing morphenom, we will try to improve the accuracy of dictionary or to handle newer or unknown words appropriately. And, for decreasing tne number of edges of nodes in each subnetwork, we will try to define something weight of the edge or to set strict condition on generating edges in a word co-occurrence network.
+For the system using a word co-occurrence network, we need to improve accuracy of morphological analysis and the mothod for generating subnetwork.
+In particular, for performing morphological analysis, we will try to improve the accuracy of dictionary or to handle newer or unknown words appropriately. And, for decreasing tne number of edges of nodes in each subnetwork, we will try to define something weight of the edge or to set strict condition on generating edges in a word co-occurrence network.
 
 \begin{thebibliography}{99}
 
