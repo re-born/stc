@@ -77,7 +77,7 @@ Tetsuya Sakai\\
 The SLSTC team participated in the NTCIR-12 Short Text Conversation
 (STC) task.
 This report describes our approach to solving the STC problem and discusses the
-ocial results.
+official results.
 \end{abstract}
 
 \section*{Team Name}
@@ -86,7 +86,7 @@ SLSTC
 \section*{Subtasks}
 Japanese subtask
 
-\keywords{STC; HNN; Word2Vec; PageRank; word co-occurrence network}
+\keywords{STC; Word2Vec; PageRank; word co-occurrence network}
 
 \section{Introduction}
 
@@ -165,7 +165,7 @@ This word network shows what word likely appear next to some word. In other word
 \subsubsection{Subnetwork Extraction}
 Test tweet data is same as the data used in RUN1. As well as previous part, we extract set of noun words from each test tweet as \(W_{t} = (w_{t1}, w_{t2}, ... w_{ti} ... w_{tn})\).
 In this part, we extract subnetwork $G'_{i}$ which contains \(w_{ti}\) from $G$.
-If wti exists in V, pick up all nodes which is next to wti.
+If $w_{ti}$ exists in V, pick up all nodes which is next to $w_{ti}$.
 
 \begin{eqnarray}V'_{i} = w_{ti} \cup \{w_{e} |  (w_{ti}, w_{e}) \in E\}\end{eqnarray}
 \begin{eqnarray}E'_{i} = \{(w_{ti}, w_{e}) | (w_{ti}, w_{e}) \in E\} \end{eqnarray}
